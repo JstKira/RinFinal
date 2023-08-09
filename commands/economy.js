@@ -248,7 +248,7 @@ return await citel.reply( `*📠 تم تحويل ${value[0]}  بنجاح💰*`)
         if (mongoschemas == "false") return citel.reply("*🚦Economy* مو مفعل بالقروب، كلم غومونريونغ يفعله");
          const secktor = "secktor"
          const balance = await eco.balance(citel.sender, secktor); //Returns wallet, bank, and bankCapacity. Also creates a USer if it doesn't exist.
-return await citel.reply(`*👛 ${citel.pushName}'s Purse:*\n\n_🪙${balance.wallet}_`)
+return await citel.reply(`*💳 محفظة ${citel.pushName}:*\n\n_🪙${balance.wallet}_`)
     }
 )
 //---------------------------------------------------------------------------
@@ -284,7 +284,7 @@ async (Void, citel, text) => {
 });
      //---------------------------------------------------------------------------
      cmd({
-        pattern: "give",
+        pattern: "منح",
         desc: "Add money in wallet.",
         category: "اقتصاد",
         filename: __filename,

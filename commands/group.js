@@ -600,7 +600,7 @@ cmd({
             try {
                 let users = citel.mentionedJid[0] ? citel.mentionedJid[0] : citel.quoted ? citel.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.whatsapp.net";
                 if (!users) return;
-                await Void.groupParticipantsUpdate(citel.chat, [users], "ترقية");
+                await Void.groupParticipantsUpdate(citel.chat, [users], "promote");
             } catch {
                 //		citel.reply(tlang().botAdmin);
 
@@ -627,7 +627,7 @@ cmd({
             try {
                 let users = citel.mentionedJid[0] ? citel.mentionedJid[0] : citel.quoted ? citel.quoted.sender : text.replace(/[^0-9]/g, "") + "@s.whatsapp.net";
                 if (!users) return;
-                await Void.groupParticipantsUpdate(citel.chat, [users], "طرد");
+                await Void.groupParticipantsUpdate(citel.chat, [users], "remove");
             } catch {
                 //		citel.reply(tlang().botAdmin);
 
@@ -803,7 +803,7 @@ cmd({
                 const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
                 if (!isAdmins) return citel.reply('خاص بالمشرفين')
                 if (!isBotAdmins) return citel.reply(' مقدر احذف الرسايل بدون اشراف')
-                if (!citel.quoted) return citel.reply(`رد على الرسالة. ${tlang().greet}`);
+                if (!citel.quoted) return citel.reply(`رد على الرسالة.`);
                 let { chat, fromMe, id } = citel.quoted;
                 const key = {
                     remoteJid: citel.chat,
@@ -825,13 +825,13 @@ cmd({
         },
         async(Void, citel, text) => {
             if (!citel.isGroup) return citel.reply('خاص بالمجموعات.')
-            if (!citel.quoted) return citel.reply('منشن اللي بتعطيه انذار طال عمرك')
-            teskd = `*All Warnings.*\n\n`
+            if (!citel.quoted) return citel.reply('منشن اللي بتشوف انذاراته طال عمرك')
+            teskd = `*جميع الانذارات.*\n\n`
             let h = await warndb.find({ id: citel.quoted.sender.split('@')[0] + 'warn' })
             console.log(h)
             teskd += `*There are total ${h.length}  warnings.*\n`
             for (let i = 0; i < h.length; i++) {
-                teskd += `*${i+1}*\n╭─────────────◆\n│ *🍁In Group:-* ${h[i].group}\n`
+                teskd += `*${i+1}*\n╭─────────────◆\n│ * مجموعة:-* ${h[i].group}\n`
                 teskd += `│ *🔰الوقت:-* ${h[i].date}\n`
                 teskd += `│ *⚠️تم اصدار الانذار من قبل:-* ${h[i].warnedby}\n`
                 teskd += `│ _📍السبب: ${h[i].reason}_\n╰─────────────◆\n\n`

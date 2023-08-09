@@ -56,7 +56,7 @@ const hourly = {
  )
 
  cmd({
-         pattern: "resetwallet",
+         pattern: "تصفير-المحفظة",
          desc: "reset wallet of quoted user.",
          category: "اقتصاد",
          filename: __filename,
@@ -76,7 +76,7 @@ const hourly = {
 	if(!users) return citel.reply('Please give me user.')
         const balance  = await eco.balance(users, "secktor")
         await eco.deduct(users, "secktor", balance.wallet);
-        return await citel.reply(`⛩️ User: @${users.split('@')[0]} \n *🧧 @${users.split('@')[0]} lost all 🪙 in wallet.*\n_Now live with that poverty.🫡_`,{mentions:[users]})
+        return await citel.reply(`⛩️ اليوزر: @${users.split('@')[0]} \n *🧧 @${users.split('@')[0]} خسر جميع مالديه في المحفظة💔.*\n_عِش بفقر الان 😉._`,{mentions:[users]})
  }
  )
     //---------------------------------------------------------------------------

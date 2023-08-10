@@ -18,6 +18,7 @@ cmd({
     return;
   }
 
+
   // Get a random card from the database
   const randomCard = await Card.findOne().skip(Math.floor(Math.random() * await Card.countDocuments()));
 
@@ -75,6 +76,7 @@ cmd({
     citel.reply(tlang().owner);
     return;
   }
+
 
   
 

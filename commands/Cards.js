@@ -68,37 +68,27 @@ cmd({
   category: 'بطاقات',
   owner: true,
   filename: __filename,
-  usage: 'أضف-بطاقة <اسم البطاقة> <تصنيف>',
-}, async (match, citel, text, { isCreator }) => {
-  // Check if the user is the owner of the bot
+  usage: 'أضف-بطاقة <اسم البطاقة> <تصنيف> <رابط الصورة>',
+}, async (message, match, citel, text, { isCreator }) => {
   if (!isCreator) {
-    citel.reply(tlang().owner);
+    citel.reply('خاص بغومونريونغ');
     return;
   }
 
   // Parse the command arguments
-  const [command, cardName, tier] = text.split(' ');
+  const [command, cardName, tier, photoLink] = text.split(' ');
 
   // Validate the arguments
-  if (!cardName || !tier) {
+  if (!cardName || !tier || !photoLink) {
     citel.reply('يرجى توفير جميع البيانات المطلوبة.');
     return;
   }
-
-  // Check if a photo is attached to the message
-  if (!citel.message.imageMessage) {
-    citel.reply('يجب إرفاق صورة مع البطاقة.');
-    return;
-  }
-
-  // Get the photo buffer
-  const photoBuffer = await getBuffer(citel.message.imageMessage);
 
   // Create a new card object
   const newCard = new Card({
     name: cardName,
     tier,
-    photo: photoBuffer,
+    photo: Buffer.from(photoLink, 'utf-8'),
   });
 
   // Save the new card to the database

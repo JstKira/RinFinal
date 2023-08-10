@@ -25,9 +25,11 @@ cmd({
 
     const card = randomCard[0];
 
+    // Check if the text is a string and has a match function
+    const caption = typeof card.name === 'string' && card.name.match(/./) ? `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}` : '';
+
     // Send the photo as an attachment or embed it within the message
     const photoBuffer = Buffer.from(card.photo.buffer);
-    const caption = `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}`;
     await citel.reply({ file: photoBuffer }, { caption });
   } catch (error) {
     console.error(error);

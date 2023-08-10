@@ -25,25 +25,9 @@ cmd({
 
     const card = randomCard[0];
 
-    // Convert the Binary data to a Buffer
-    const photoBuffer = Buffer.from(card.photo.buffer);
-
-    // Create the temp directory if it doesn't exist
-    const tempDir = path.join(__dirname, 'temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
-    }
-
-    // Save the photo locally
-    const photoPath = path.join(tempDir, 'photo.png');
-    await fs.writeFile(photoPath, photoBuffer);
-
-    // Send the photo as a reply with card details
-    const caption = `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}`;
-    await citel.reply({ file: photoPath }, { caption });
-
-    // Remove the temporary photo file
-    await fs.unlink(photoPath);
+    // Send the card details as a reply
+    const message = `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}`;
+    await citel.reply(message);
   } catch (error) {
     console.error(error);
     citel.reply('حدث خطأ أثناء استرجاع البطاقة العشوائية.');

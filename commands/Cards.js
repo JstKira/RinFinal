@@ -23,9 +23,8 @@ cmd({
 
     const card = randomCard[0];
 
-    // Download the photo
-    const photoResponse = await axios.get(card.photo, { responseType: 'arraybuffer' });
-    const photoBuffer = Buffer.from(photoResponse.data);
+    // Convert the Binary data to a Buffer
+    const photoBuffer = Buffer.from(card.photo.buffer);
 
     // Save the photo locally
     const photoPath = './temp/photo.png';

@@ -1,4 +1,4 @@
-const axios = require('axios');
+/*const axios = require('axios');
 const fs = require('fs-extra');
 const { exec } = require('child_process');
 const Card = require('../lib/database/Card.js');
@@ -86,3 +86,4 @@ cmd({
     citel.reply('حدث خطأ أثناء إضافة البطاقة إلى قاعدة البيانات.');
   }
 });
+*/

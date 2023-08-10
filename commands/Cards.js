@@ -61,8 +61,6 @@ cmd({
 
 
 
-const Card = require('./lib/database/Card.js');
-const { tlang, getAdmin, prefix, Config, sck, fetchJson, runtime, cmd, getBuffer } = require('../lib');
 
 cmd({
   pattern: 'أضف-بطاقة',

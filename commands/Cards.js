@@ -11,7 +11,7 @@ cmd({
   category: 'بطاقات',
   owner: true,
   filename: __filename,
-}, async (message, match, citel, text, { isCreator, Void }) => {
+}, async (match, citel, text, { isCreator }) => {
   // Check if the user is the owner of the bot
   if (!isCreator) {
     citel.reply(tlang().owner);
@@ -69,7 +69,7 @@ cmd({
   owner: true,
   filename: __filename,
   usage: 'أضف-بطاقة <اسم البطاقة> <تصنيف>',
-}, async (message, match, citel, text, { isCreator }) => {
+}, async (match, citel, text, { isCreator }) => {
   // Check if the user is the owner of the bot
   if (!isCreator) {
     citel.reply(tlang().owner);

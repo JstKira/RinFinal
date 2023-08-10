@@ -12,31 +12,28 @@ cmd({
   filename: __filename,
 }, async (match, citel) => {
   try {
-    // Get the count of cards in the database
-    const cardCount = await Card.countDocuments();
-
-    // Generate a random index within the range of card count
-    const randomIndex = Math.floor(Math.random() * cardCount);
-
-    // Find a random card document using the random index
-    const randomCard = await Card.findOne().skip(randomIndex);
+    // Get a random card from the database
+    const randomCard = await Card.aggregate([{ $sample: { size: 1 } }]);
 
     // If no card is found, handle the error
-    if (!randomCard) {
+    if (!randomCard || randomCard.length === 0) {
       citel.reply('لا توجد بطاقات متاحة في الوقت الحالي.');
       return;
     }
 
+    const card = randomCard[0];
+
     // Download the photo
-    const photoResponse = await axios.get(randomCard.photo, { responseType: 'arraybuffer' });
-    const photoBuffer = Buffer.from(photoResponse.data, 'binary');
+    const photoResponse = await axios.get(card.photo, { responseType: 'arraybuffer' });
+    const photoBuffer = Buffer.from(photoResponse.data);
 
     // Save the photo locally
     const photoPath = './temp/photo.png';
     await fs.writeFile(photoPath, photoBuffer);
 
     // Send the photo as a reply with card details
-    await citel.reply({ file: photoPath }, `اسم البطاقة: ${randomCard.name}\nتصنيف: ${randomCard.tier}`);
+    const caption = `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}`;
+    await citel.reply({ file: photoPath }, { caption });
 
     // Remove the temporary photo file
     await fs.unlink(photoPath);
@@ -46,6 +43,7 @@ cmd({
   }
 });
 
+//---------------------------------------------------------------------------------
 
 
 cmd({

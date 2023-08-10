@@ -5,6 +5,8 @@ const Card = require('../lib/database/Card.js');
 const { tlang, getAdmin, prefix, Config, sck, fetchJson, runtime, cmd, getBuffer } = require('../lib');
 let { dBinary, eBinary } = require('../lib/binary');
 
+const path = require('path');
+
 cmd({
   pattern: 'ارسل-بطاقة',
   desc: 'يرسل بطاقة عشوائية',
@@ -26,8 +28,14 @@ cmd({
     // Convert the Binary data to a Buffer
     const photoBuffer = Buffer.from(card.photo.buffer);
 
+    // Create the temp directory if it doesn't exist
+    const tempDir = path.join(__dirname, 'temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir);
+    }
+
     // Save the photo locally
-    const photoPath = './temp/photo.png';
+    const photoPath = path.join(tempDir, 'photo.png');
     await fs.writeFile(photoPath, photoBuffer);
 
     // Send the photo as a reply with card details
@@ -41,7 +49,6 @@ cmd({
     citel.reply('حدث خطأ أثناء استرجاع البطاقة العشوائية.');
   }
 });
-
 //---------------------------------------------------------------------------------
 
 

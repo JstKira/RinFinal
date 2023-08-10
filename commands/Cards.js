@@ -70,12 +70,15 @@ cmd({
   owner: true,
   filename: __filename,
   usage: 'أضف-بطاقة <اسم البطاقة> <تصنيف> <رابط الصورة>',
-}, async (message, match, citel, text, { isCreator }) => {
+}, async (match, citel, text, { isCreator }) => {
   // Check if the user is the owner of the bot
   if (!isCreator) {
     citel.reply(tlang().owner);
     return;
   }
+
+
+  
 
   // Parse the command arguments
   const [command, cardName, tier, photoLink] = text.split(' ');

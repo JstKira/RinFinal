@@ -1,9 +1,9 @@
 const axios = require('axios')
-const { sck1, tiny, fancytext, listall,cmd,ffmpeg } = require('../lib/')
 const fs = require('fs-extra');
 const { exec } = require('child_process')
 const Card = require('./lib/database/Card.js');
-
+ const { tlang, getAdmin, prefix, Config, sck, fetchJson, runtime,cmd,getBuffer } = require('../lib')
+ let { dBinary, eBinary } = require("../lib/binary");
 cmd({
   pattern: 'ارسل-بطاقة',
   desc: 'يرسل بطاقة عشوائية',

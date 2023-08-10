@@ -80,7 +80,7 @@ cmd({
   }
 
   // Parse the command arguments
-  const [command, cardName, tier, photoLink] = text.split(' ');
+  const [cardName, tier, photoLink] = text.split(' ');
 
   // Validate the arguments
   if (!cardName || !tier || !photoLink) {

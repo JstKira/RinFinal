@@ -25,9 +25,10 @@ cmd({
 
     const card = randomCard[0];
 
-    // Send the card details as a reply
-    const message = `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}`;
-    await citel.reply(message);
+    // Send the photo as an attachment or embed it within the message
+    const photoBuffer = Buffer.from(card.photo.buffer);
+    const caption = `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}`;
+    await citel.reply({ file: photoBuffer }, { caption });
   } catch (error) {
     console.error(error);
     citel.reply('حدث خطأ أثناء استرجاع البطاقة العشوائية.');

@@ -4,7 +4,7 @@ const { exec } = require('child_process');
 const Card = require('./lib/database/Card.js');
 const { tlang, getAdmin, prefix, Config, sck, fetchJson, runtime, cmd, getBuffer } = require('../lib');
 let { dBinary, eBinary } = require('../lib/binary');
-
+/*
 cmd({
   pattern: 'ارسل-بطاقة',
   desc: 'يرسل بطاقة عشوائية',
@@ -57,4 +57,58 @@ cmd({
 
   // Remove the temporary photo file
   await fs.unlink(photoPath);
+});
+
+
+
+const Card = require('./lib/database/Card.js');
+const { tlang, getAdmin, prefix, Config, sck, fetchJson, runtime, cmd, getBuffer } = require('../lib');
+*/
+cmd({
+  pattern: 'أضف-بطاقة',
+  desc: 'يضيف بطاقة جديدة إلى قاعدة البيانات',
+  category: 'بطاقات',
+  owner: true,
+  filename: __filename,
+  usage: 'أضف-بطاقة <اسم البطاقة> <تصنيف>',
+}, async (message, match, citel, text, { isCreator }) => {
+  // Check if the user is the owner of the bot
+  if (!isCreator) {
+    citel.reply(tlang().owner);
+    return;
+  }
+
+  // Parse the command arguments
+  const [command, cardName, tier] = text.split(' ');
+
+  // Validate the arguments
+  if (!cardName || !tier) {
+    citel.reply('يرجى توفير جميع البيانات المطلوبة.');
+    return;
+  }
+
+  // Check if a photo is attached to the message
+  if (!citel.message.imageMessage) {
+    citel.reply('يجب إرفاق صورة مع البطاقة.');
+    return;
+  }
+
+  // Get the photo buffer
+  const photoBuffer = await getBuffer(citel.message.imageMessage);
+
+  // Create a new card object
+  const newCard = new Card({
+    name: cardName,
+    tier,
+    photo: photoBuffer,
+  });
+
+  // Save the new card to the database
+  try {
+    await newCard.save();
+    citel.reply('تمت إضافة البطاقة بنجاح إلى قاعدة البيانات.');
+  } catch (error) {
+    console.error(error);
+    citel.reply('حدث خطأ أثناء إضافة البطاقة إلى قاعدة البيانات.');
+  }
 });

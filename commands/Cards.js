@@ -84,16 +84,23 @@ cmd({
     return;
   }
 
-  // Create a new card object
-  const newCard = new Card({
-    name: cardName,
-    tier,
-    photo: Buffer.from(photoLink, 'utf-8'),
-  });
-
-  // Save the new card to the database
   try {
+    // Download the image and store it as a buffer
+    const response = await axios.get(photoLink, {
+      responseType: 'arraybuffer',
+    });
+    const photoBuffer = Buffer.from(response.data, 'binary');
+
+    // Create a new card object
+    const newCard = new Card({
+      name: cardName,
+      tier,
+      photo: photoBuffer,
+    });
+
+    // Save the new card to the database
     await newCard.save();
+
     citel.reply('تمت إضافة البطاقة بنجاح إلى قاعدة البيانات.');
   } catch (error) {
     console.error(error);

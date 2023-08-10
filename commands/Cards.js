@@ -25,12 +25,11 @@ cmd({
 
     const card = randomCard[0];
 
-    // Check if the text is a string and has a match function
-    const caption = typeof card.name === 'string' && card.name.match(/./) ? `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}` : '';
+    // Build the caption for the photo
+    const caption = `اسم البطاقة: ${card.name}\nتصنيف: ${card.tier}`;
 
-    // Send the photo as an attachment or embed it within the message
-    const photoBuffer = Buffer.from(card.photo.buffer);
-    await citel.reply({ file: photoBuffer }, { caption });
+    // Send the photo as an attachment with a caption
+    await citel.reply({ photo: card.photo.buffer, caption });
   } catch (error) {
     console.error(error);
     citel.reply('حدث خطأ أثناء استرجاع البطاقة العشوائية.');

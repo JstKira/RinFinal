@@ -64,7 +64,7 @@ let buttonMessage = {
 
 }
 
-Void.sendMessage(citel.chat,{image:{url:data.data[0].url}})
+Void.sendMessage(citel.reply,{image:{url:data.data[0].url}})
 }
 )
 //......................................................

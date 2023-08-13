@@ -41,18 +41,21 @@ cmd({
   if (!text) return citel.reply(`*وش تبيني ارسم لك؟*`);
 
   try {
-    const response = await openai.createImage({
+    const response = await openai.complete({
       prompt: text,
+      max_tokens: 2,
+      temperature: 0.5,
       n: 2,
-      size: "1024x1024",
+      stop: "\n",
     });
 
     // Access the generated images from the response and handle them as desired
-    const generatedImages = response.images;
-    for (const image of generatedImages) {
-      const imageUrl = image.url;
-      // Handle the image URL, such as displaying or sending it as a reply
-      Void.sendMessage(citel.chat, { image: { url: imageUrl } });
+    const choices = response.choices;
+    for (const choice of choices) {
+      const generatedText = choice.text.trim();
+      // Handle the generated text, such as extracting the image URL and processing it
+      // Note: The response may not directly provide an image URL, so you may need additional processing steps specific to your use case.
+      // Please refer to the OpenAI API documentation for more details on the response structure.
     }
   } catch (error) {
     console.error("Error generating images:", error);

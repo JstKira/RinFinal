@@ -1,16 +1,15 @@
-
-
-const axios = require('axios');
 const { tlnag, cmd, getBuffer, prefix, Config } = require('../lib');
 
+// Word list for the game
 const wordList = ['ناروتو', 'لوفي', 'غورين', 'كينغ', 'ميكاسا'];
-const MAX_INCORRECT_GUESSES = 6;
 
+// Function to select a random word from the word list
 function selectRandomWord() {
   const randomIndex = Math.floor(Math.random() * wordList.length);
   return wordList[randomIndex];
 }
 
+// Function to initialize the game state
 function initializeGameState() {
   const word = selectRandomWord();
   const guessedLetters = new Set();
@@ -18,6 +17,7 @@ function initializeGameState() {
   return { word, guessedLetters, incorrectGuesses };
 }
 
+// Function to display the current state of the game
 function displayGameState(word, guessedLetters, incorrectGuesses) {
   const maskedWord = word
     .split('')
@@ -29,6 +29,7 @@ function displayGameState(word, guessedLetters, incorrectGuesses) {
   `;
 }
 
+// Function to check if the game has been won
 function isGameWon(word, guessedLetters) {
   const wordLetters = new Set(word.split(''));
   for (const letter of wordLetters) {
@@ -45,40 +46,51 @@ cmd({
   category: 'العاب',
   use: '',
 }, async (Void, citel) => {
+  // Initialize the game state
   const { word, guessedLetters, incorrectGuesses } = initializeGameState();
-  const recipient = '<recipient_phone_number>'; // Replace with the recipient's phone number
 
-  // Send the initial game state
-  await sendWhatsAppMessage(displayGameState(word, guessedLetters, incorrectGuesses), recipient);
+  // Send the initial game state as a reply
+  await citel.reply(displayGameState(word, guessedLetters, incorrectGuesses));
 
+  // Function to handle user guesses
   async function handleGuess(guess) {
+    // Ignore non-alphabetic characters
     if (!/^[a-zA-Z]+$/.test(guess)) {
-      await sendWhatsAppMessage('تخمين خاطئ!😬 أعد المحاولة', recipient);
+      await citel.reply('تخمين خاطئ!😬 أعد المحاولة');
       return;
     }
 
+    // Convert the guess to lowercase
     guess = guess.toLowerCase();
 
+    // Check if the letter has already been guessed
     if (guessedLetters.has(guess)) {
-      await sendWhatsAppMessage('لقد خمنت هذا الحرف بالفعل، جرب حرف اخر', recipient);
+      await citel.reply('لقد خمنت هذا الحرف بالفعل، جرب حرف اخر');
       return;
     }
 
+    // Add the guessed letter to the set of guessed letters
     guessedLetters.add(guess);
 
+    // Check if the guess is correct
     if (word.includes(guess)) {
+      // Check if the game has been won
       if (isGameWon(word, guessedLetters)) {
-        await sendWhatsAppMessage(`لقد فزت! 👌🏻، الكلمة هي: "${word}".`, recipient);
+        await citel.reply(` لقد فزت! 👌🏻، الكلمة هي: "${word}".`);
       } else {
-        await sendWhatsAppMessage(displayGameState(word, guessedLetters, incorrectGuesses), recipient);
+        // Continue the game
+        await citel.reply(displayGameState(word, guessedLetters, incorrectGuesses));
       }
     } else {
+      // Incorrect guess
       incorrectGuesses++;
 
-      if (incorrectGuesses === MAX_INCORRECT_GUESSES) {
-        await sendWhatsAppMessage(`انتهت اللعبة! لقد خسرت 🥲، الكلمة هي: "${word}".`, recipient);
+      // Check if the game has been lost
+      if (incorrectGuesses === 6) {
+        await citel.reply(`انتهت اللعبة! لقد خسرت 🥲، الكلمة هي: "${word}".`);
       } else {
-        await sendWhatsAppMessage(displayGameState(word, guessedLetters, incorrectGuesses), recipient);
+        // Continue the game
+        await citel.reply(displayGameState(word, guessedLetters, incorrectGuesses));
       }
     }
   }
@@ -91,15 +103,3 @@ cmd({
     }
   });
 });
-
-async function sendWhatsAppMessage(message, recipient) {
-  try {
-    await axios.post('https://api.whatsapp.com/send', {
-      message,
-      recipient
-    });
-    console.log('Message sent successfully.');
-  } catch (error) {
-    console.error('Failed to send message:', error);
-  }
-}

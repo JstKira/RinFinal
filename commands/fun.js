@@ -42,7 +42,7 @@ async (match, citel) => {
         model: "image-alpha-001",
         prompt: `Draw a picture of ${prompt}`,
         num_images: 1,
-        size: "1024x1024",
+        size: "512x512",
       },
       {
         headers: {

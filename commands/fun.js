@@ -29,37 +29,44 @@ const openai = new OpenAIApi(configuration);
 //......................................................
 
 cmd({
-  pattern: "ارسم",
-  alias: ['تخيل', 'dall-e'],
-  desc: "Create Image by AI",
-  category: "ترفيه",
-  use: '<an astronaut in mud.>',
-  filename: __filename,
-}, async (Void, citel, text, { isCreator }) => {
-  // if (!isCreator) return citel.reply(tlang().owner)
-  if (Config.OPENAI_API_KEY === '') return citel.reply('مشكلة بال API، كلم غومونريونغ يجدده');
-  if (!text) return citel.reply(`*وش تبيني ارسم لك؟*`);
-
-  try {
-    const response = await openai.createImage({
-      prompt: text,
-      n: 1,
-      size: "256x256",
-    });
-
-    // Access the generated images from the response and handle them as desired
-    const generatedImages = response.images;
-    for (const image of generatedImages) {
-      const imageUrl = image.url;
-      // Handle the image URL, such as displaying or sending it as a reply
-      Void.sendMessage(citel.reply, { image: { url: imageUrl } });
-    }
-  } catch (error) {
-    console.error("Error generating images:", error);
-    // Handle the error, such as sending an error message
-    citel.reply('حدث خطأ أثناء إنشاء الصورة. يرجى المحاولة مرة أخرى.');
-  }
+    pattern: "ارسم",
+    alias : ['تخيل','dall-e'],
+    desc: "Create Image by AI",
+    category: "ترفيه",
+    use: '<an astronaut in mud.>',
+    filename: __filename,
+},
+async(Void, citel,text,{isCreator}) => 
+{
+//if (!isCreator) return citel.reply(tlang().owner)
+if (Config.OPENAI_API_KEY=='') return citel.reply('مشكلة بال API، كلم غومونريونغ يجدده');
+if (!text) return citel.reply(`*وش تبيني ارسم لك؟*`); 
+const imageSize = '256x256'
+const apiUrl = 'https://api.openai.com/v1/images/generations';
+const response = await fetch(apiUrl, {
+method: 'POST',
+headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${Config.OPENAI_API_KEY}`
+},
+body: JSON.stringify({
+  model: 'image-alpha-001',
+  prompt: text,
+  size: imageSize ,
+  response_format: 'url'
+})
 });
+
+const data = await response.json();
+let buttonMessage = {
+    image:{url:data.data[0].url},
+    caption : '*---تفضل النتيجة---*'
+
+}
+
+Void.sendMessage(citel.chat,{image:{url:data.data[0].url}})
+}
+)
 //......................................................
 const Poetry = require('../lib/database/Poetry.js');
 

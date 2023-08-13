@@ -34,7 +34,7 @@ async(Void, citel,text,{isCreator}) =>
 //if (!isCreator) return citel.reply(tlang().owner)
 if (Config.OPENAI_API_KEY=='') return citel.reply('مشكلة بال API، كلم غومونريونغ يجدده');
 if (!text) return citel.reply(`*وش تبيني ارسم لك؟*`); 
-const imageSize = '256x256'
+const imageSize = '512x512'
 const apiUrl = 'https://api.openai.com/v1/images/generations';
 const response = await fetch(apiUrl, {
 method: 'POST',

@@ -49,15 +49,21 @@ async (match, citel) => {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
           "Content-Type": "application/json",
         },
+        responseType: 'arraybuffer', // Set the response type to arraybuffer
       }
     );
 
-    // Get the URL of the generated image
-    const imageUrl = response.data.data[0].url;
+    // Save the image to a file
+    const imageData = response.data.data[0];
+    const imageBuffer = Buffer.from(imageData, 'base64');
+    const fileName = `${prompt.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
+    fs.writeFileSync(fileName, imageBuffer);
 
-    // Send the image to the user
-    await citel.reply(`تم رسم الصورة الخاصة بـ "${prompt}"`);
-    await citel.sendFileFromUrl(imageUrl);
+    // Send the image file to the user
+    await Void.sendMessage(citel.chat, { file: fs.createReadStream(fileName) }, { quoted: citel });
+
+    // Delete the temporary image file
+    fs.unlinkSync(fileName);
   } catch (err) {
     console.error(err);
     await citel.reply("حدث خطأ أثناء رسم الصورة. يرجى المحاولة مرة أخرى.");

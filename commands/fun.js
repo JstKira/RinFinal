@@ -43,8 +43,8 @@ cmd({
   try {
     const response = await openai.createImage({
       prompt: text,
-      n: 2,
-      size: "1024x1024",
+      n: 1,
+      size: "256x256",
     });
 
     // Access the generated images from the response and handle them as desired
@@ -52,7 +52,7 @@ cmd({
     for (const image of generatedImages) {
       const imageUrl = image.url;
       // Handle the image URL, such as displaying or sending it as a reply
-      Void.sendMessage(citel.chat, { image: { url: imageUrl } });
+      Void.sendMessage(citel.reply, { image: { url: imageUrl } });
     }
   } catch (error) {
     console.error("Error generating images:", error);

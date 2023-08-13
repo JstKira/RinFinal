@@ -49,7 +49,7 @@ headers: {
   'Authorization': `Bearer ${Config.OPENAI_API_KEY}`
 },
 body: JSON.stringify({
-  model: 'image-alpha-001',
+  model: 'image-davinci-002',
   prompt: text,
   size: imageSize ,
   response_format: 'url'

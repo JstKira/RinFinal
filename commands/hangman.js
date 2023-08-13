@@ -96,10 +96,8 @@ cmd({
   }
 
   // Listen for user guesses
-  tlnag.on('message', async message => {
-    if (message.from === citel.from && message.to === citel.to && message.pattern === 'guess') {
-      const guess = message.arguments[0];
-      await handleGuess(guess);
-    }
-  });
+  if (citel.quoted) {
+    const guess = citel.body;
+    await handleGuess(guess);
+  }
 });

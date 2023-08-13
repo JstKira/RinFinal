@@ -15,60 +15,50 @@ const { getRandomPoem } = require('../lib/poetry.js');
 const fs = require('fs');
 const path = require('path');
 const quotesPath = path.join(__dirname, '..', 'lib', 'Quotes.json');
-
+const speed = require('performance-now')
+const fetch = require('node-fetch');
 
 //......................................................
 
 cmd({
-  pattern: "ارسم",
-  desc: "يرسم صورة تتعلق بالكلمات المعطاة",
-  category: "ترفيه",
-  filename: __filename,
+    pattern: "ارسم",
+    alias : ['تخيل','dall-e'],
+    desc: "Create Image by AI",
+    category: "ترفيه",
+    use: '<an astronaut in mud.>',
+    filename: __filename,
 },
-async (match, citel) => {
-  // Get the prompt from the user input
-  const prompt = citel.body.slice(6).trim();
-
-  if (!prompt) {
-    await citel.reply("يجب عليك تحديد ما تريد رسمه.");
-    return;
-  }
-
-  // Call the DALL-E API to generate an image based on the prompt
-  try {
-    const response = await axios.post(
-      "https://api.openai.com/v1/images/generations",
-      {
-        model: "image-alpha-001",
-        prompt: `Draw a picture of ${prompt}`,
-        num_images: 1,
-        size: "512x512",
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        responseType: 'arraybuffer', // Set the response type to arraybuffer
-      }
-    );
-
-    // Save the image to a file
-    const imageData = response.data.data[0];
-    const imageBuffer = Buffer.from(imageData, 'base64');
-    const fileName = `${prompt.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png`;
-    fs.writeFileSync(fileName, imageBuffer);
-
-    // Send the image file to the user
-    await Void.sendMessage(citel.chat, { file: fs.createReadStream(fileName) }, { quoted: citel });
-
-    // Delete the temporary image file
-    fs.unlinkSync(fileName);
-  } catch (err) {
-    console.error(err);
-    await citel.reply("حدث خطأ أثناء رسم الصورة. يرجى المحاولة مرة أخرى.");
-  }
+async(Void, citel,text,{isCreator}) => 
+{
+//if (!isCreator) return citel.reply(tlang().owner)
+if (Config.OPENAI_API_KEY=='') return citel.reply('مشكلة بال API، كلم غومونريونغ يجدده');
+if (!text) return citel.reply(`*وش تبيني ارسم لك؟*`); 
+const imageSize = '256x256'
+const apiUrl = 'https://api.openai.com/v1/images/generations';
+const response = await fetch(apiUrl, {
+method: 'POST',
+headers: {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${Config.OPENAI_API_KEY}`
+},
+body: JSON.stringify({
+  model: 'image-alpha-001',
+  prompt: text,
+  size: imageSize ,
+  response_format: 'url'
+})
 });
+
+const data = await response.json();
+let buttonMessage = {
+    image:{url:data.data[0].url},
+    caption : '*---تفضل النتيجة---*'
+
+}
+
+Void.sendMessage(citel.chat,{image:{url:data.data[0].url}})
+}
+)
 //......................................................
 const Poetry = require('../lib/database/Poetry.js');
 

@@ -10,7 +10,7 @@
  **/
 const { dare, truth, random_question } = require('../lib/truth-dare.js');
 const axios = require('axios');
-const { tlang, botpic, prefix, runtime, Config , sleep } = require('../lib')
+const { botpic, prefix, runtime, Config , sleep } = require('../lib')
 const { cmd } = require('../lib');
 const { getRandomPoem } = require('../lib/poetry.js');
 const fs = require('fs');

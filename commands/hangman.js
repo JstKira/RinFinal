@@ -39,7 +39,7 @@ cmd({
   word,
   maskedWord,
   remainingGuesses,
-  user: citel.user // Set the user field to the user who initiated the game
+  user: citel.sender // Set the user field to the user who initiated the game
 });
 
   await room.save(); // Save the game room data to MongoDB

@@ -101,10 +101,12 @@ cmd(
         chat: citel.chat,
         state: "PLAYING",
         game: new HangmanGame(),
+        players: [citel.sender], // Assign the player to the game
       };
       room.game.setWordToGuess(word);
       this.game[room.id] = room;
-    }
+    } else if (!room.players.includes(citel.sender)) {
+      room.players.push(citel.sender); 
 
     let maskedWord = room.game.getMaskedWord();
 

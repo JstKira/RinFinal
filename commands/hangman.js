@@ -146,12 +146,8 @@ cmd(
       }
     } else {
       await Void.sendMessage(citel.chat, {
-        text: `كلمة المشنوقة:\n${maskedWord}`,
+        text: `الكلمة :\n${maskedWord}`,
       });
     }
   }
 );
-
-module.exports = {
-  HangmanGame,
-};

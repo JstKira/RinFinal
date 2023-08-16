@@ -1,103 +1,100 @@
 const { tlnag, cmd, getBuffer, prefix, Config } = require('../lib');
 
-// Word list for the game
-const wordList = ['ناروتو', 'لوفي', 'غورين', 'كينغ', 'ميكاسا'];
+cmd(
+  {
+    pattern: "المشنقة",
+    desc: "لعبة المشنقة",
+    category: "العاب",
+    use: "",
+  },
+  async (Void, citel) => {
+    // List of Arabic words for the game
+    const words = ["تفاحة", "موزة", "برتقالة", "عنب", "فراولة"];
 
-// Function to select a random word from the word list
-function selectRandomWord() {
-  const randomIndex = Math.floor(Math.random() * wordList.length);
-  return wordList[randomIndex];
-}
+    // Select a random word from the list
+    const word = words[Math.floor(Math.random() * words.length)];
 
-// Function to initialize the game state
-function initializeGameState() {
-  const word = selectRandomWord();
-  const guessedLetters = new Set();
-  const incorrectGuesses = 0;
-  return { word, guessedLetters, incorrectGuesses };
-}
+    // Initialize the game state
+    const gameState = {
+      word: word,
+      guessedLetters: new Set(),
+      incorrectGuesses: 0,
+    };
 
-// Function to display the current state of the game
-function displayGameState(word, guessedLetters, incorrectGuesses) {
-  const maskedWord = word
-    .split('')
-    .map(letter => (guessedLetters.has(letter) ? letter : '_'))
-    .join(' ');
-  return `
-    Word: ${maskedWord}
-    Incorrect Guesses: ${incorrectGuesses}
-  `;
-}
+    // Send the initial game state as a reply
+    const initialMessage = await citel.reply(displayGameState(gameState));
 
-// Function to check if the game has been won
-function isGameWon(word, guessedLetters) {
-  const wordLetters = new Set(word.split(''));
-  for (const letter of wordLetters) {
-    if (!guessedLetters.has(letter)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-cmd({
-  pattern: 'المشنقة',
-  desc: 'Play Hangman',
-  category: 'العاب',
-  use: '',
-}, async (Void, citel) => {
-  // Initialize the game state
-  const { word, guessedLetters, incorrectGuesses } = initializeGameState();
-
-  // Send the initial game state as a reply
-  await citel.reply(displayGameState(word, guessedLetters, incorrectGuesses));
-
-  // Function to handle user guesses
-  async function handleGuess(guess) {
-    // Ignore non-alphabetic characters
-    if (!/^[a-zA-Z]+$/.test(guess)) {
-      await citel.reply('تخمين خاطئ!😬 أعد المحاولة');
-      return;
-    }
-
-    // Convert the guess to lowercase
-    guess = guess.toLowerCase();
-
-    // Check if the letter has already been guessed
-    if (guessedLetters.has(guess)) {
-      await citel.reply('لقد خمنت هذا الحرف بالفعل، جرب حرف اخر');
-      return;
-    }
-
-    // Add the guessed letter to the set of guessed letters
-    guessedLetters.add(guess);
-
-    // Check if the guess is correct
-    if (word.includes(guess)) {
-      // Check if the game has been won
-      if (isGameWon(word, guessedLetters)) {
-        await citel.reply(` لقد فزت! 👌🏻، الكلمة هي: "${word}".`);
-      } else {
-        // Continue the game
-        await citel.reply(displayGameState(word, guessedLetters, incorrectGuesses));
+    // Function to handle user guesses
+    async function handleGuess(guess) {
+      // Ignore non-alphabetic characters
+      if (!/^[ء-ي]+$/.test(guess)) {
+        await citel.reply('تخمين خاطئ! 😬 أعد المحاولة');
+        return;
       }
-    } else {
-      // Incorrect guess
-      incorrectGuesses++;
 
-      // Check if the game has been lost
-      if (incorrectGuesses === 6) {
-        await citel.reply(`انتهت اللعبة! لقد خسرت 🥲، الكلمة هي: "${word}".`);
+      // Convert the guess to normalized form
+      guess = guess.normalize("NFKD");
+
+      // Check if the letter has already been guessed
+      if (gameState.guessedLetters.has(guess)) {
+        await citel.reply('لقد خمنت هذا الحرف بالفعل، جرب حرف آخر');
+        return;
+      }
+
+      // Add the guessed letter to the set of guessed letters
+      gameState.guessedLetters.add(guess);
+
+      // Check if the guess is correct
+      if (gameState.word.includes(guess)) {
+        // Check if the game has been won
+        if (isGameWon(gameState)) {
+          await citel.reply(`لقد فزت! 👌🏻 الكلمة هي: "${gameState.word}".`);
+        } else {
+          // Continue the game
+          await citel.reply(displayGameState(gameState));
+        }
       } else {
-        // Continue the game
-        await citel.reply(displayGameState(word, guessedLetters, incorrectGuesses));
+        // Incorrect guess
+        gameState.incorrectGuesses++;
+
+        // Check if the game has been lost
+        if (gameState.incorrectGuesses === 6) {
+          await citel.reply(`انتهت اللعبة! لقد خسرت 🥲 الكلمة هي: "${gameState.word}".`);
+        } else {
+          // Continue the game
+          await citel.reply(displayGameState(gameState));
+        }
       }
     }
-  }
 
-  // Listen for user guesses
-  if (citel.quoted) {
-    const guess = citel.body;
-    await handleGuess(guess);
+    // Listen for user guesses
+    const followMessage = await citel.follow(initialMessage, async (message) => {
+      const guess = message.body;
+      await handleGuess(guess);
+    });
+
+    // Handle follow message errors
+    followMessage.on('error', (error) => {
+      console.error('Follow message error:', error);
+    });
+
+    // Function to display the game state
+    function displayGameState(gameState) {
+      const word = gameState.word;
+      const guessedLetters = Array.from(gameState.guessedLetters);
+      let display = "كلمة: ";
+
+      for (const letter of word) {
+        if (guessedLetters.includes(letter)) {
+          display += `${letter} `;
+        } else {
+          display += "_ ";
+        }
+      }
+
+      display += `\n\nعدد المحاولات الخاطئة: ${gameState.incorrectGuesses}/6`;
+
+      return display;
+    }
   }
-});
+);

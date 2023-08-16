@@ -1,6 +1,6 @@
 const { cmd } = require("../lib/");
 const mongoose = require("mongoose"); // Require the 'mongoose' package
-const { HangmanRoom } = require("../lib/database/HangmanRoom.js"); // Update with the correct path to the HangmanRoom schema file
+const HangmanRoom = require("../lib/database/HangmanRoom.js"); // Update with the correct path to the HangmanRoom schema file
 const words = require('../lib/words.js'); // array of words to pick from
 
 mongoose.connect('mongodb+srv://thamerrin:Thamer12@rin.kikwxum.mongodb.net/?retryWrites=true&w=majority', {

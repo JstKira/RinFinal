@@ -1,22 +1,20 @@
-const { cmd, parseJid, getAdmin, tlang } = require("../lib/");
-const { MongoClient } = require("mongodb");
-const { sck1 } = require("../lib/database/user.js"); // Update with the correct path to the UserSchema file
+const { cmd } = require("../lib/");
+const mongoose = require("mongoose"); // Require the 'mongoose' package
+const { HangmanRoom } = require("../lib/database/HangmanRoom.js"); // Update with the correct path to the HangmanRoom schema file
+const words = require('../lib/words.js'); // array of words to pick from
 
-const mongoURI = "mongodb+srv://thamerrin:Thamer12@rin.kikwxum.mongodb.net/?retryWrites=true&w=majority"; // Update with your MongoDB connection URI
-
-let db; // MongoDB database connection
-
-MongoClient.connect(mongoURI, (err, client) => {
-  if (err) {
-    console.error("Error connecting to MongoDB:", err);
-    return;
-  }
-  db = client.db("hangmanGame"); // Update with your preferred database name
-  console.log("Connected to MongoDB!");
+mongoose.connect('mongodb+srv://thamerrin:Thamer12@rin.kikwxum.mongodb.net/?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => {
+  console.error('Failed to connect to MongoDB:', err);
 });
 
-//----------------------
-const words = require('../lib/words.js'); // array of words to pick from
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 cmd({
   pattern: 'hangman',
@@ -36,18 +34,14 @@ cmd({
   citel.reply(`Starting hangman in room ${roomId}`);
   citel.reply(maskedWord);
 
-  const user = await sck1.findOne({ id: citel.sender }); // Find the user based on the sender ID
-
-  const room = {
-    id: roomId, 
+  const room = new HangmanRoom({
+    roomId,
     word,
     maskedWord,
-    remaining: remainingGuesses,
-    player: user // Store the reference to the user
-  };
+    remainingGuesses
+  });
 
-  // Store the game room in MongoDB
-  db.collection("hangmanRooms").insertOne(room);
+  await room.save(); // Save the game room data to MongoDB
 
 });
 
@@ -58,13 +52,8 @@ cmd({
 
   console.log(`Received text message: ${text}`);
 
-  // Find the user based on the sender ID
-  const user = await sck1.findOne({ id: citel.sender });
-
-  // Find the game room in MongoDB based on the user and room ID
-  const room = await db.collection("hangmanRooms").findOne({
-    'player.id': user.id,
-    id: { $regex: /^hangman-/ }
+  const room = await HangmanRoom.findOne({
+    roomId: { $regex: /^hangman-/ }
   });
 
   if (!room || typeof text !== 'string' || text.length === 0) return;
@@ -74,28 +63,26 @@ cmd({
   console.log(`Guess: ${guess}`);
 
   if (room.word.includes(guess)) {
-    room.maskedWord = fillInLetter(room.maskedWord, room.word, guess); 
+    room.maskedWord = fillInLetter(room.maskedWord, room.word, guess);
     if (!room.maskedWord.includes('_')) {
       citel.reply(`You guessed the word: ${room.word}`);
-      // Delete the game room from MongoDB
-      db.collection("hangmanRooms").deleteOne({ id: room.id });
-      return; 
+      await room.remove(); // Remove the game room data from MongoDB
+      return;
     }
   } else {
-    room.remaining--;
+    room.remainingGuesses--;
   }
 
-  if (room.remaining === 0) {
+  if (room.remainingGuesses === 0) {
     citel.reply(`You lost! The word was ${room.word}`);
-    // Delete the game room from MongoDB
-    db.collection("hangmanRooms").deleteOne({ id: room.id });
+    await room.remove(); // Remove the game room data from MongoDB
     return;
   }
 
-  console.log(`Remaining: ${room.remaining}`);
+  console.log(`Remaining Guesses: ${room.remainingGuesses}`);
   console.log(`Masked Word: ${room.maskedWord}`);
 
-  citel.reply(`Guess: ${guess}, Remaining: ${room.remaining}`);
+  citel.reply(`Guess: ${guess}, Remaining Guesses: ${room.remainingGuesses}`);
   citel.reply(room.maskedWord);
 
 });
@@ -113,7 +100,7 @@ function maskWord(word) {
 function fillInLetter(masked, word, letter) {
   let idx = word.indexOf(letter);
   while (idx !== -1) {
-    masked = masked.substring(0, idx) + letter + masked.substring(idx + 1); 
+    masked = masked.substring(0, idx) + letter + masked.substring(idx + 1);
     idx = word.indexOf(letter, idx + 1);
   }
   return masked;

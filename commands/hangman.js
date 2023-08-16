@@ -1,5 +1,6 @@
 const { cmd, parseJid, getAdmin, tlang } = require("../lib/");
 
+this.rooms = {}; // Initialize this.rooms as an object
 
 //----------------------
 const words = require('../lib/words.js'); // array of words to pick from

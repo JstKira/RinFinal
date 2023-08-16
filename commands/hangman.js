@@ -34,14 +34,13 @@ cmd({
   citel.reply(`Starting hangman in room ${roomId}`);
   citel.reply(maskedWord);
 
-  const room = new HangmanRoom({
+const room = new HangmanRoom({
+  user: ObjectId(citel.sender), // Convert the string to an ObjectId
   roomId,
   word,
   maskedWord,
-  remainingGuesses,
-  user: citel.sender // Set the user field to the user who initiated the game
+  remainingGuesses
 });
-
   await room.save(); // Save the game room data to MongoDB
 
 });

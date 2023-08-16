@@ -35,7 +35,6 @@ cmd({
   citel.reply(maskedWord);
 
 const room = new HangmanRoom({
-  user: ObjectId(citel.sender), // Convert the string to an ObjectId
   roomId,
   word,
   maskedWord,

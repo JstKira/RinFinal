@@ -22,35 +22,34 @@ class HangmanGame {
     return this.maskedWord;
   }
 
-  makeGuess(guess) {
-    guess = guess.toLowerCase();
+ makeGuess(guess) {
+  guess = guess.toLowerCase();
 
-    if (this.guesses.includes(guess)) {
-      return -1;
-    }
-
-    this.guesses.push(guess);
-
-    let indices = [];
-    for (let i = 0; i < this.wordToGuess.length; i++) {
-      if (this.wordToGuess[i] === guess) {
-        indices.push(i);
-      }
-    }
-
-    if (indices.length > 0) {
-      let maskedArr = this.maskedWord.split("");
-      for (let index of indices) {
-        maskedArr[index] = guess;
-      }
-      this.maskedWord = maskedArr.join("");
-    } else {
-      this.attempts++;
-    }
-
-    return indices.length;
+  if (this.guesses.includes(guess)) {
+    return -1;
   }
 
+  this.guesses.push(guess);
+
+  let indices = [];
+  for (let i = 0; i < this.wordToGuess.length; i++) {
+    if (this.wordToGuess[i] === guess) {
+      indices.push(i);
+    }
+  }
+
+  if (indices.length > 0) {
+    let maskedArr = this.maskedWord.split("");
+    for (let index of indices) {
+      maskedArr[index] = this.wordToGuess[index];
+    }
+    this.maskedWord = maskedArr.join("");
+  } else {
+    this.attempts++;
+  }
+
+  return indices.length;
+}
   isWin() {
     return this.maskedWord === this.wordToGuess;
   }

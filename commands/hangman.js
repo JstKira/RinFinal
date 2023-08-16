@@ -39,7 +39,7 @@ cmd({
     room.id.startsWith('hangman')
   );
 
-  if (!room) return;
+  if (!room || typeof text !== 'string' || text.length === 0) return;
 
   let guess = text.toLowerCase()[0];
 
@@ -64,22 +64,3 @@ cmd({
   citel.reply(room.maskedWord);
 
 })
-
-// helper functions 
-
-function randomWord(words) {
-  return words[Math.floor(Math.random() * words.length)];
-}
-
-function maskWord(word) {
-  return word.replace(/./g, '_');
-} 
-
-function fillInLetter(masked, word, letter) {
-  let idx = word.indexOf(letter);
-  while (idx !== -1) {
-    masked = masked.substring(0,idx) + letter + masked.substring(idx+1); 
-    idx = word.indexOf(letter, idx + 1);
-  }
-  return masked;
-}

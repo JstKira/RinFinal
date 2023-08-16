@@ -22,34 +22,35 @@ class HangmanGame {
     return this.maskedWord;
   }
 
- makeGuess(guess) {
-  guess = guess.toLowerCase();
+  makeGuess(guess) {
+    guess = guess.toLowerCase();
 
-  if (this.guesses.includes(guess)) {
-    return -1;
-  }
-
-  this.guesses.push(guess);
-
-  let indices = [];
-  for (let i = 0; i < this.wordToGuess.length; i++) {
-    if (this.wordToGuess[i] === guess) {
-      indices.push(i);
+    if (this.guesses.includes(guess)) {
+      return -1;
     }
-  }
 
-  if (indices.length > 0) {
-    let maskedArr = this.maskedWord.split("");
-    for (let index of indices) {
-      maskedArr[index] = this.wordToGuess[index];
+    this.guesses.push(guess);
+
+    let indices = [];
+    for (let i = 0; i < this.wordToGuess.length; i++) {
+      if (this.wordToGuess[i] === guess) {
+        indices.push(i);
+      }
     }
-    this.maskedWord = maskedArr.join("");
-  } else {
-    this.attempts++;
+
+    if (indices.length > 0) {
+      let maskedArr = this.maskedWord.split("");
+      for (let index of indices) {
+        maskedArr[index] = this.wordToGuess[index];
+      }
+      this.maskedWord = maskedArr.join("");
+    } else {
+      this.attempts++;
+    }
+
+    return indices.length;
   }
 
-  return indices.length;
-}
   isWin() {
     return this.maskedWord === this.wordToGuess;
   }
@@ -92,7 +93,7 @@ cmd(
         "قمر",
         "نجمة",
         "جبل",
-      ]; // List of Arabic words for guessing
+      ];
       let randomIndex = Math.floor(Math.random() * words.length);
       let word = words[randomIndex];
       room = {
@@ -148,3 +149,7 @@ cmd(
     }
   }
 );
+
+module.exports = {
+  HangmanGame,
+};

@@ -2,7 +2,7 @@ const { tlnag, cmd, getBuffer, prefix, Config } = require('../lib');
 
 cmd(
   {
-    pattern: "المشنقة",
+    pattern: "مشنوق",
     desc: "لعبة المشنقة",
     category: "العاب",
     use: "",

@@ -1,4 +1,4 @@
-const { tlnag, cmd, getBuffer, Config } = require('../lib');
+const { tlnag, cmd, getBuffer, prefix, Config } = require('../lib');
 class HangmanGame {
   constructor() {
     this.wordToGuess = "";
@@ -62,13 +62,12 @@ class HangmanGame {
 cmd(
   {
     pattern: "مشنوق",
-    desc: "لعبة المشنوقة",
+    desc: "لعبة المشنوق",
     category: "العاب",
     use: "",
   },
   async (Void, citel, text) => {
     if (!citel.isGroup) return;
-    let { prefix } = require('../lib');
     this.game = this.game ? this.game : {};
 
     let room = Object.values(this.game).find(

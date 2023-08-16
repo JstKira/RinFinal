@@ -132,7 +132,7 @@ cmd(
 
         maskedWord = room.game.getMaskedWord();
         await Void.sendMessage(citel.chat, {
-          text: `كلمة المشنقة:\n${maskedWord}`,
+          text: `الكلمة :\n${maskedWord}`,
         });
 
         if (room.game.isWin()) {

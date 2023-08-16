@@ -145,6 +145,10 @@ cmd(
           });
           delete this.game[room.id];
         }
+      } else {
+        await Void.sendMessage(citel.chat, {
+          text: "يرجى إدخال حرف للتخمين.",
+        });
       }
     }
   }

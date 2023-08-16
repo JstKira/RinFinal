@@ -4,7 +4,7 @@ const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 
 // Define videotime variable
-const videotime = 3600;
+const videotime = 3600000;
 
 cmd({
   pattern: 'شغل',
@@ -15,7 +15,7 @@ cmd({
   use: '<text>',
 }, async (Void, citel, text) => {
   try {
-    const dlsize = 250; // Maximum file size in MB
+    const dlsize = 400; // Maximum file size in MB
     const yts = require('secktor-pack');
     const search = await yts(text);
     const anu = search.videos[0];

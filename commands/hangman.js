@@ -34,7 +34,7 @@ cmd(
     on: "text"
   },
   async (Void, citel, text) => {
-    if (!citel.isGroup) return;
+    if (!citel.isGroup || typeof text !== 'string') return;
     let { prefix } = require('../lib');
     
     this.hangmanGame = this.hangmanGame ? this.hangmanGame : {};

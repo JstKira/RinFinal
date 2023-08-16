@@ -107,49 +107,44 @@ cmd(
 
     let maskedWord = room.game.getMaskedWord();
 
-    await Void.sendMessage(citel.chat, {
-      text: `كلمة المشنقة:\n${maskedWord}`,
-    });
+    if (room.chat === citel.chat && text) {
+      let guess = text.trim();
+      let result = room.game.makeGuess(guess);
 
-    if (room.state === "PLAYING" && room.chat === citel.chat) {
-      if (text) {
-        let guess = text.trim();
-        let result = room.game.makeGuess(guess);
-        if (result === -1) {
-          await Void.sendMessage(citel.chat, {
-            text: "لقد قمت بتخمين هذا الحرف من قبل!",
-          });
-        } else if (result === 0) {
-          await Void.sendMessage(citel.chat, {
-            text: "للأسف، هذا الحرف غير موجود في الكلمة.",
-          });
-        } else {
-          await Void.sendMessage(citel.chat, {
-            text: "تم تخمين الحرف بنجاح!",
-          });
-        }
-
-        maskedWord = room.game.getMaskedWord();
+      if (result === -1) {
         await Void.sendMessage(citel.chat, {
-          text: `الكلمة :\n${maskedWord}`,
+          text: "لقد قمت بتخمين هذا الحرف من قبل!",
         });
-
-        if (room.game.isWin()) {
-          await Void.sendMessage(citel.chat, {
-            text: "أحسنت! لقد فزت باللعبة!",
-          });
-          delete this.game[room.id];
-        } else if (room.game.isLose()) {
-          await Void.sendMessage(citel.chat, {
-            text: "للأسف، انتهت الفرص المتاحة. لقد خسرت اللعبة.",
-          });
-          delete this.game[room.id];
-        }
+      } else if (result === 0) {
+        await Void.sendMessage(citel.chat, {
+          text: "للأسف، هذا الحرف غير موجود في الكلمة.",
+        });
       } else {
         await Void.sendMessage(citel.chat, {
-          text: "يرجى إدخال حرف للتخمين.",
+          text: "تم تخمين الحرف بنجاح!",
         });
       }
+
+      maskedWord = room.game.getMaskedWord();
+      await Void.sendMessage(citel.chat, {
+        text: `الكلمة :\n${maskedWord}`,
+      });
+
+      if (room.game.isWin()) {
+        await Void.sendMessage(citel.chat, {
+          text: "أحسنت! لقد فزت باللعبة!",
+        });
+        delete this.game[room.id];
+      } else if (room.game.isLose()) {
+        await Void.sendMessage(citel.chat, {
+          text: "للأسف، انتهت الفرص المتاحة. لقد خسرت اللعبة.",
+        });
+        delete this.game[room.id];
+      }
+    } else {
+      await Void.sendMessage(citel.chat, {
+        text: `كلمة المشنوقة:\n${maskedWord}`,
+      });
     }
   }
 );

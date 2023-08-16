@@ -1,12 +1,8 @@
-const { cmd } = require("../lib/");
-const Hangman = require('../lib/hangman');
+const Hangman = require('../lib/hangman.js');
 const words = require('../lib/words');
 
-const cmd = {
-  pattern: 'hangman',
-  desc: 'Start a game of hangman',
-  category: 'Games'
-};
+const { cmd } = require("../lib/");
+const prefixRegex = /^!/; // Update the prefixRegex according to your command prefix
 
 cmd.command = async (Void, citel) => {
   const sender = citel.sender;
@@ -20,17 +16,23 @@ cmd.command = async (Void, citel) => {
 
   hangman.printWordState();
 
-  citel.on('message', (message) => {
-    if (message.sender === sender) {
-      const letter = message.content.trim();
+  const input = typeof citel.text === "string" ? citel.text.trim() : false;
 
-      hangman.makeGuess(letter);
+  if (input && input[1] && input[1] === " ") {
+    input = input[0] + input.slice(2);
+  }
 
-      if (hangman.maxGuesses === 0 || hangman.word.split('').every(char => hangman.guesses.has(char))) {
-        citel.removeAllListeners('message');
-      }
+  const isCommand = input ? prefixRegex.test(input[0]) : false;
+
+  if (isCommand) {
+    const letter = input.slice(1).trim();
+
+    hangman.makeGuess(letter);
+
+    if (hangman.maxGuesses === 0 || hangman.word.split('').every(char => hangman.guesses.has(char))) {
+      // Game over, handle the end of the game
     }
-  });
+  }
 };
 
 function getRandomWord() {

@@ -1,6 +1,6 @@
 const { cmd, parseJid, getAdmin, tlang } = require("../lib/");
 
-this.rooms = {}; // Initialize this.rooms as an object
+let rooms = {}; // Initialize rooms as an empty object
 
 //----------------------
 const words = require('../lib/words.js'); // array of words to pick from
@@ -16,10 +16,10 @@ cmd({
   let maskedWord = maskWord(word);
   let remainingGuesses = 6;
 
-  citel.reply(`Starting hangman in room ${roomId}`)
+  citel.reply(`Starting hangman in room ${roomId}`);
   citel.reply(maskedWord);
 
-  this.rooms[roomId] = {
+  rooms[roomId] = {
     id: roomId, 
     word,
     maskedWord,
@@ -34,7 +34,7 @@ cmd({
   priority: 1
 }, async (Void, citel, text) => {
 
-  let room = Object.values(this.rooms).find(room => 
+  let room = Object.values(rooms).find(room => 
     room.player === citel.sender && 
     room.id.startsWith('hangman')
   );
@@ -47,7 +47,7 @@ cmd({
     room.maskedWord = fillInLetter(room.maskedWord, room.word, guess); 
     if (!room.maskedWord.includes('_')) {
       citel.reply(`You guessed the word: ${room.word}`);
-      delete this.rooms[room.id];
+      delete rooms[room.id];
       return; 
     }
   } else {
@@ -56,7 +56,7 @@ cmd({
 
   if (room.remaining === 0) {
     citel.reply(`You lost! The word was ${room.word}`);
-    delete this.rooms[room.id];       
+    delete rooms[room.id];       
     return;
   }
 

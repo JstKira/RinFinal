@@ -16,6 +16,10 @@ cmd({
   let maskedWord = maskWord(word);
   let remainingGuesses = 6;
 
+  console.log(`Starting hangman in room ${roomId}`);
+  console.log(`Word: ${word}`);
+  console.log(`Masked Word: ${maskedWord}`);
+
   citel.reply(`Starting hangman in room ${roomId}`);
   citel.reply(maskedWord);
 
@@ -34,6 +38,8 @@ cmd({
   priority: 1
 }, async (Void, citel, text) => {
 
+  console.log(`Received text message: ${text}`);
+
   let room = Object.values(rooms).find(room => 
     room.player === citel.sender && 
     room.id.startsWith('hangman')
@@ -42,6 +48,8 @@ cmd({
   if (!room || typeof text !== 'string' || text.length === 0) return;
 
   let guess = text.toLowerCase()[0];
+
+  console.log(`Guess: ${guess}`);
 
   if (room.word.includes(guess)) {
     room.maskedWord = fillInLetter(room.maskedWord, room.word, guess); 
@@ -59,6 +67,9 @@ cmd({
     delete rooms[room.id];       
     return;
   }
+
+  console.log(`Remaining: ${room.remaining}`);
+  console.log(`Masked Word: ${room.maskedWord}`);
 
   citel.reply(`Guess: ${guess}, Remaining: ${room.remaining}`);
   citel.reply(room.maskedWord);

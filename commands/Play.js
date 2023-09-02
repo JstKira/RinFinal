@@ -4,7 +4,7 @@ const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 
 // Define videotime variable
-const videotime = 3600000;
+const videotime = 36000000;
 
 cmd({
   pattern: 'شغل',

@@ -1,4 +1,4 @@
-import { WAMessageStubType } from '@adiwajshing/baileys'
+/*import { WAMessageStubType } from '@adiwajshing/baileys'
 
 export async function before(m, { conn }) {
 	if (!m.messageStubType || !m.isGroup) return
@@ -18,7 +18,7 @@ export async function before(m, { conn }) {
 		await this.sendMessage(m.chat, { text: `الجروب *${m.messageStubParameters[0] == 'on' ? 'مغلق 🔒' : 'مفتوح 🔓'}*\n ${m.messageStubParameters[0] == 'on' ? 'المشرفين بس' : 'يلا'} سولفوا.`, mentions: [m.sender] }, { quoted: fkontak })
   /* } else if (m.messageStubType == 28) {
    conn.sendMessage(m.chat, { text: `${usuario} ELIMINO A @${m.messageStubParameters[0].split`@`[0]} 🫵`, mentions: [m.sender]}, { quoted: fkontak })  */
-	} else if (m.messageStubType == 29) {
+	/*} else if (m.messageStubType == 29) {
 		await this.sendMessage(m.chat, { text: `@${m.messageStubParameters[0].split`@`[0]} *بالتوفيق   *\n\n* رقاك الى مشرف*: ${usuario}`, mentions: [`${m.sender}`,`${m.messageStubParameters[0]}`] }, { quoted: fkontak })
 	} else if (m.messageStubType == 30) {
 		await this.sendMessage(m.chat, { text: `@${m.messageStubParameters[0].split`@`[0]} *شكرًا لجهودك*\n\n* شالك من الاشراف*: ${usuario}`, mentions: [`${m.sender}`,`${m.messageStubParameters[0]}`] }, { quoted: fkontak })
@@ -34,3 +34,4 @@ export async function before(m, { conn }) {
 		});
 	}
 }
+*/

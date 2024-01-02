@@ -1,4 +1,4 @@
-const { tlang, ringtone, cmd, fetchJson, sleep, botpic, getBuffer, pinterest, prefix, Config } = require('../lib');
+/*const { tlang, ringtone, cmd, fetchJson, sleep, botpic, getBuffer, pinterest, prefix, Config } = require('../lib');
 const ytdl = require('ytdl-secktor');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
@@ -91,4 +91,4 @@ cmd({
     console.error(error);
     citel.reply('❌ صارت مشكلة اثناء المعالجة، حاول مره ثانيه.');
   }
-});
+});*/

@@ -9,13 +9,19 @@ const hangmanWords = JSON.parse(fs.readFileSync('./lib/hangman.json'));
 let hangmanWord;
 let hangmanState;
 let hangmanIncorrectGuesses;
-let maxIncorrectGuesses = 6
+let maxIncorrectGuesses = 6;
 
 function startNewGame() {
   // Select a random word from the hangmanWords array
   hangmanWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
   hangmanState = Array(hangmanWord.length).fill("_");
   hangmanIncorrectGuesses = 0;
+}
+
+function deleteGame() {
+  hangmanWord = null;
+  hangmanState = null;
+  hangmanIncorrectGuesses = null;
 }
 
 cmd(
@@ -46,6 +52,8 @@ cmd(
 
     if (!/^([a-z]|[أ-ي])$/i.test(citel.text)) return;
 
+    if (!hangmanWord) return citel.reply("لا يوجد لعبة مشنقة جارية حاليًا. استخدم .hangman لبدء لعبة جديدة.");
+
     const guess = citel.text.toLowerCase();
     if (hangmanWord.includes(guess)) {
       // Update hangman state with correct guess
@@ -68,6 +76,7 @@ cmd(
       await Void.sendMessage(citel.chat, {
         text: `تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`,
       });
+      deleteGame(); // Reset game data
       return;
     }
 
@@ -76,6 +85,7 @@ cmd(
       await Void.sendMessage(citel.chat, {
         text: `لقد انتهت محاولات اللعب، الكلمة الصحيحة كانت: ${hangmanWord}`,
       });
+      deleteGame(); // Reset game data
       return;
     }
 

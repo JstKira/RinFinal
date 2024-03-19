@@ -3,45 +3,73 @@ const eco = require('discord-mongoose-economy')
 const ty = eco.connect(mongodb);
 cmd(
   {
-    pattern: "hangman",
-    desc: "يلعب لعبة الرجل المشنوق",
-    category: "العاب",
+    pattern: "المشنقة",
+    desc: "يبدأ لعبة المشنقة.",
+    category: "الألعاب",
   },
   async (Void, citel, text) => {
     if (!citel.isGroup) return citel.reply(tlang().group);
-    let { prefix } = require('../lib')
-    let words = ["programming", "javascript", "python", "nodejs", "typescript"];
-    let randomIndex = Math.floor(Math.random() * words.length);
-    let word = words[randomIndex];
-    let guessedLetters = [];
-    let attempts = 7;
-    let hiddenWord = word.replace(/\w/g, "*");
-    let message = `الكلمة: ${hiddenWord}\nتخمين الحروف: ${guessedLetters.join(", ")}\nالمحاولات المتبقية: ${attempts}`;
-    citel.reply(message);
-    while (attempts > 0 && hiddenWord.includes("*")) {
-      const response = await Void.waitForMessage(citel.chat, { quoted: citel });
-      let guess = response.text.toLowerCase();
-      if (guess.length !== 1 || !/[a-z]/.test(guess)) {
-        citel.reply("اختر حرفًا واحدًا فقط.");
-        continue;
-      }
-      if (guessedLetters.includes(guess)) {
-        citel.reply("لقد تم تخمين هذا الحرف بالفعل.");
-        continue;
-      }
-      guessedLetters.push(guess);
-      if (word.includes(guess)) {
-        hiddenWord = word.split('').map(letter => guessedLetters.includes(letter) ? letter : "*").join('');
-      } else {
-        attempts--;
-      }
-      message = `الكلمة: ${hiddenWord}\nتخمين الحروف: ${guessedLetters.join(", ")}\nالمحاولات المتبقية: ${attempts}`;
-      citel.reply(message);
+    
+    // تهيئة حالة لعبة المشنقة
+    const hangmanWord = "المشنقة"; // كلمة مثالية للعبة
+    let hangmanState = Array(hangmanWord.length).fill("❓");
+    let hangmanIncorrectGuesses = 0;
+    const maxIncorrectGuesses = 6; // الحد الأقصى للتخمينات الخاطئة المسموح بها
+    
+    // إرسال تصور المشنقة الأولي
+    const initialHangmanMessage = `كلمة المشنقة: ${hangmanState.join(" ")}\nالتخمينات الخاطئة: ${hangmanIncorrectGuesses}/${maxIncorrectGuesses}`;
+    citel.reply(initialHangmanMessage);
+  }
+);
+
+cmd(
+  {
+    on: "text",
+  },
+  async (Void, citel, text) => {
+    // التحقق مما إذا كان الرسالة من مجموعة
+    if (!citel.isGroup) return;
+    
+    // الحصول على كلمة المشنقة وحالة اللعبة من الرسالة
+    const hangmanWord = "المشنقة"; // كلمة مثالية للعبة
+    let hangmanState = Array(hangmanWord.length).fill("❓");
+    let hangmanIncorrectGuesses = 0;
+    const maxIncorrectGuesses = 6; // الحد الأقصى للتخمينات الخاطئة المسموح بها
+    
+    // معالجة إدخال المستخدم أثناء اللعبة
+    const guess = text.toLowerCase();
+    
+    // التحقق مما إذا كان التخمين حرفًا واحدًا
+    if (guess.length !== 1 || !guess.match(/[أ-ي]/)) {
+      return citel.reply("يرجى إدخال حرف واحد كتخمين.");
     }
-    if (!hiddenWord.includes("*")) {
-      return citel.reply("أحسنت! لقد حززت.");
-    } else {
-      return citel.reply(`لقد خسرت. الكلمة الصحيحة كانت ${word}.`);
+    
+    // التحقق مما إذا كان الحرف المخمن موجودًا في كلمة المشنقة
+    let correctGuess = false;
+    for (let i = 0; i < hangmanWord.length; i++) {
+      if (hangmanWord[i] === guess) {
+        hangmanState[i] = guess;
+        correctGuess = true;
+      }
+    }
+    
+    // تحديث حالة المشنقة بناءً على التخمين
+    if (!correctGuess) {
+      hangmanIncorrectGuesses++;
+    }
+    
+    // التحقق من شروط الفوز / الخسارة
+    const hangmanComplete = !hangmanState.includes("❓");
+    const gameOver = hangmanIncorrectGuesses >= maxIncorrectGuesses || hangmanComplete;
+    
+    // إرسال تصور المشنقة المحدث
+    const hangmanMessage = `كلمة المشنقة: ${hangmanState.join(" ")}\nالتخمينات الخاطئة: ${hangmanIncorrectGuesses}/${maxIncorrectGuesses}`;
+    citel.reply(hangmanMessage);
+    
+    // معالجة شروط الفوز / الخسارة
+    if (gameOver) {
+      const gameOverMessage = hangmanComplete ? "تهانينا، لقد حزرت الكلمة!" : "انتهت اللعبة! لقد نفدت التخمينات.";
+      citel.reply(gameOverMessage);
     }
   }
 );

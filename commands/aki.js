@@ -6,8 +6,8 @@ let games = {}; // Store active Akinator games with user IDs as keys
 
 cmd(
   {
-    pattern: "akinator",
-    desc: "يلعب لعبة أكيناتور",
+    pattern: "المارد",
+    desc: " لعبة المارد",
     category: "العاب",
   },
   async (Void, citel, text) => {

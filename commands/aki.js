@@ -36,6 +36,11 @@ cmd(
   }
 );
 
+const { cmd, gis } = require("../lib/");
+const { Aki } = require('aki-api');
+
+let games = {}; // Store active Akinator games with user IDs as keys
+
 cmd(
   {
     on: "text"
@@ -62,24 +67,35 @@ cmd(
 
       if (aki.progress >= 90) {
         const guessedCharacter = await aki.win();
-        const characterName = guessedCharacter.name;
-        
-        // Retrieve image for the guessed character
-        const images = await gis(characterName);
-        const imageUrl = images[0].url; // Get the first image URL
-        
-        // Send picture with caption
-        const buttonMessage = {
-          image: {
-            url: imageUrl,
-          },
-          caption: `تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${characterName}*`,
-          headerType: 4,
-        };
+        const guesses = guessedCharacter.guesses;
+        const guessCount = guessedCharacter.guessCount;
 
-        Void.sendMessage(citel.chat, buttonMessage, {
-          quoted: citel,
-        });
+        // Loop through the guesses to find a valid name and picture
+        let characterName, characterImageUrl;
+        for (const guess of guesses) {
+          if (guess.name && guess.picture_path) {
+            characterName = guess.name;
+            characterImageUrl = guess.absolute_picture_path;
+            break; // Found a valid name and picture, exit the loop
+          }
+        }
+
+        if (characterName && characterImageUrl) {
+          // Send picture with caption
+          const buttonMessage = {
+            image: {
+              url: characterImageUrl,
+            },
+            caption: `تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${characterName}*`,
+            headerType: 4,
+          };
+
+          Void.sendMessage(citel.chat, buttonMessage, {
+            quoted: citel,
+          });
+        } else {
+          citel.reply("عذرا، لم أتمكن من التعرف على الشخصية.");
+        }
 
         delete games[citel.sender]; // Delete the game
         return;
@@ -95,3 +111,4 @@ cmd(
     }
   }
 );
+

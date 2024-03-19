@@ -18,11 +18,7 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!citel.isGroup) return citel.reply(tlang().group);
-    
-    // Check if there's an ongoing hangman game
-    if (hangmanData) {
-      return citel.reply("يوجد لعبة مشنقة جارية حاليًا، انتظر حتى انتهاء اللعبة الحالية أو استخدم .hangman_new لبدء لعبة جديدة.");
-    }
+  
 
     // Select a random word from the hangmanWords array
     const hangmanWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];

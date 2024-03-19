@@ -24,12 +24,12 @@ cmd(
         aki: aki
       };
 
-      const questionText = `**سؤال:** ${question}\n\n**خيارات:**\n\n`;
+      const questionText = `*سؤال:** ${question}\n\n*خيارات:*\n\n`;
       const optionsText = answers.map((answer, index) => `${index + 1}. ${answer}`).join("\n");
 
       citel.reply(`${questionText}${optionsText}`);
     } else {
-      citel.reply("لديك لعبة أكيناتور نشطة بالفعل!");
+      citel.reply("لديك لعبة نشطة بالفعل!");
     }
   }
 );

@@ -1,10 +1,3 @@
-const { cmd, parseJid, getAdmin, tlang } = require("../lib/");
-const eco = require('discord-mongoose-economy')
-const ty = eco.connect(mongodb);
-const fs = require('fs');
-
-// Read the hangman words from the JSON file
-const hangmanWords = JSON.parse(fs.readFileSync('./lib/hangman.json'));
 
 let hangmanGame = null;
 
@@ -75,6 +68,18 @@ function createHangmanGame(citel) {
       await Void.sendMessage(citel.chat, {
         text: hangmanStatus,
       });
+      
+      // Check if the maximum incorrect guesses reached
+      if (hangmanIncorrectGuesses >= maxIncorrectGuesses) {
+        await Void.sendMessage(citel.chat, {
+          text: `لقد نفذت جميع المحاولات الخاطئة! الكلمة الصحيحة كانت: ${hangmanWord}`,
+        });
+        // Remove the command handlers
+        hangmanCmd.remove();
+        hangmanTextCmd.remove();
+        // Reset the hangman game
+        hangmanGame = null;
+      }
     }
   );
 
@@ -100,6 +105,7 @@ cmd(
     
     if (!hangmanGame) {
       createHangmanGame(citel);
+      citel.reply("لقد بدأت لعبة المشنقة. قم بتخمين الحروف الصحيحة لتخمين الكلمة!");
     } else {
       citel.reply("يوجد لعبة المشنقة جارية حاليًا.");
     }

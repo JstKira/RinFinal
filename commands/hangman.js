@@ -4,7 +4,7 @@ const ty = eco.connect(mongodb);
 const fs = require('fs');
 
 // Read the hangman words from the JSON file
-const hangmanWords = JSON.parse(fs.readFileSync('hangman_words.json'));
+const hangmanWords = JSON.parse(fs.readFileSync('./lib/hangman.json'));
 
 let hangmanData = null; // Variable to store hangman game data
 const maxIncorrectGuesses = 6; // Maximum allowed incorrect guesses

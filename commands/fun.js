@@ -141,38 +141,9 @@ async (match, citel, text, { isCreator }) => {
 //..........................................................
 
 
-cmd({
-  pattern: "مقولات",
-  desc: "يرسل مقولة",
-  category: "ترفيه",
-  filename: __filename,
-}, async (Void, citel, text) => {
-  const quotes = JSON.parse(fs.readFileSync(quotesPath, 'utf8'));
-  console.log('Parsed quotes:', quotes);
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-  console.log('Random quote:', randomQuote);
-  return citel.reply(`** ${JSON.stringify(randomQuote)}\n\n*Powered by غومونريونغ*`);
-});
+
     //---------------------------------------------------------------------------
-    cmd({
-        pattern: "حقيقة",
-        desc: "Sends quotes in chat.",
-        category: "ترفيه",
-        filename: __filename,
-    },
-    async(Void, citel, text) => {
-        var quoo = await axios.get(`https://waqi3arabiya.com/api/quotes/random`)
-        const replyf = `
-╔════◇
-║ *🎗️الحقيقة:* ${quoo.data.quote.body}
-║ *:* ${quoo.data.quote.author}
-║    
-╚════════════╝ `
-return citel.reply(replyf)
-    }
-
-)
-
+    
   /* cmd({
         pattern: "عرف",
         desc: "urban dictionary.",

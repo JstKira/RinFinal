@@ -94,5 +94,6 @@ cmd(
         citel.reply(`${questionText}${optionsText}`);
     }
   }
+  }
 );
 

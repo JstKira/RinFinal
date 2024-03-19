@@ -49,7 +49,7 @@ cmd(
         return;
       }
 
-      const guess = text.toLowerCase(); // Treat the input as lowercase letters
+      const guess = citel.text;
       const game = games[citel.sender];
       const aki = game.aki;
 

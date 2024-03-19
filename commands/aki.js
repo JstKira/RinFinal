@@ -1,4 +1,4 @@
-const { cmd, tlang } = require("../lib/");
+const { cmd } = require("../lib/");
 const eco = require('discord-mongoose-economy');
 const { Aki } = require('aki-api');
 
@@ -40,15 +40,9 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
-
-    // Ensure that text is a string before calling toLowerCase
-    if (typeof text !== 'string') {
-      citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
-      return;
-    }
-
-    const guess = text.toLowerCase(); // Treat the input as lowercase letters
-
+    if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+    return;
+} else {
     // Check if the input is a valid number between 1 and 5
     if (!/^[1-5]$/i.test(guess)) {
       citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");

@@ -44,12 +44,12 @@ cmd(
       return;
     } else {
       // Check if the input is a valid number between 1 and 5
-      const guess = citel.text; // Remove leading and trailing whitespace
-      if (!/^[1-5]$/i.test(guess)) {
+      if (!/^[1-5]$/i.test(text)) {
         citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
         return;
       }
 
+      const guess = text.toLowerCase(); // Treat the input as lowercase letters
       const game = games[citel.sender];
       const aki = game.aki;
 
@@ -59,8 +59,9 @@ cmd(
       await aki.step(index); // Pass the index to the Akinator API
 
       if (aki.progress >= 90) {
-        const guessedName = await aki.win();
-        citel.reply(`عرفتت! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+        const guessedCharacter = await aki.win();
+        const guessedName = guessedCharacter.name; // Access the name property
+        citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
         delete games[citel.sender]; // Delete the game
         return;
       }

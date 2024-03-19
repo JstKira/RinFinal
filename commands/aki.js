@@ -1,7 +1,9 @@
 const { cmd } = require("../lib/");
 const eco = require('discord-mongoose-economy');
 const { Aki } = require('aki-api');
-
+let gis = require("async-g-i-s");
+const axios = require('axios')
+const fetch = require('node-fetch')
 let games = {}; // Store active Akinator games with user IDs as keys
 
 cmd(
@@ -58,19 +60,30 @@ cmd(
 
       await aki.step(index); // Pass the index to the Akinator API
 
-     if (aki.progress >= 90) {
+      if (aki.progress >= 90) {
         const guessedCharacter = await aki.win();
-        const firstGuess = guessedCharacter.guesses[0]; // Access the first guess object
-        const guessedName = firstGuess.name; // Access the name property of the first guess
-        console.log("Guessed name:", guessedName); // Log the guessed name
-        if (guessedName) {
-            citel.reply(`عرفتت! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
-        } else {
-            citel.reply("عجزت اعرف الشخصية، من كنت تفكر فيه؟");
-        }
+        const characterName = guessedCharacter.name;
+        
+        // Retrieve image for the guessed character
+        const images = await gis(characterName);
+        const imageUrl = images[0].url; // Get the first image URL
+        
+        // Send picture with caption
+        const buttonMessage = {
+          image: {
+            url: imageUrl,
+          },
+          caption: `تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${characterName}*`,
+          headerType: 4,
+        };
+
+        Void.sendMessage(citel.chat, buttonMessage, {
+          quoted: citel,
+        });
+
         delete games[citel.sender]; // Delete the game
         return;
-    } else {
+      } else {
         const question = aki.question;
         const answers = aki.answers;
 
@@ -78,6 +91,7 @@ cmd(
         const optionsText = answers.map((answer, index) => `${index + 1}. ${answer}`).join("\n");
 
         citel.reply(`${questionText}${optionsText}`);
+      }
     }
   }
 );

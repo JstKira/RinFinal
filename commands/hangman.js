@@ -1,8 +1,11 @@
 const { cmd, parseJid, getAdmin, tlang } = require("../lib/");
 const eco = require('discord-mongoose-economy')
 const ty = eco.connect(mongodb);
+// Read the hangman words from the JSON file
+const hangmanWords = JSON.parse(fs.readFileSync('./lib/hangman.json'));
 
-const hangmanWord = "المشنقة"; // كلمة مثالية للعبة
+// Select a random word from the hangmanWords array
+const hangmanWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
 let hangmanState = Array(hangmanWord.length).fill("_");
 let hangmanIncorrectGuesses = 0;
 const maxIncorrectGuesses = 6; // الحد الأقصى للتخمينات الخاطئة المسموح بها

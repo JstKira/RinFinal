@@ -43,6 +43,8 @@ cmd(
 
     const guess = Number(text);
 
+    console.log("Received guess:", guess);
+
     // Check if the input is a valid number within the range of options provided by Akinator
     if (isNaN(guess) || guess < 1 || guess > 5) {
       citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
@@ -56,7 +58,7 @@ cmd(
 
     if (aki.progress >= 90) {
       const guessedName = await aki.win();
-      citel.reply(`عرفت! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+      citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
       delete games[citel.sender]; // Delete the game
       return;
     }

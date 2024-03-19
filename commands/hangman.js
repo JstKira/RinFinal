@@ -52,7 +52,7 @@ cmd(
 
     if (!/^([a-z]|[أ-ي])$/i.test(citel.text)) return;
 
-    if (!hangmanWord) return citel.reply("لا يوجد لعبة مشنقة جارية حاليًا. استخدم .hangman لبدء لعبة جديدة.");
+    if (!hangmanWord) return;
 
     const guess = citel.text.toLowerCase();
     if (hangmanWord.includes(guess)) {

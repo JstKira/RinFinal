@@ -9,7 +9,7 @@ const hangmanWords = JSON.parse(fs.readFileSync('./lib/hangman.json'));
 let hangmanWord;
 let hangmanState;
 let hangmanIncorrectGuesses;
-let maxIncorrectGuesses = 6;
+let maxIncorrectGuesses = 10;
 
 function startNewGame() {
   // Select a random word from the hangmanWords array

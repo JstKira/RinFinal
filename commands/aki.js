@@ -56,7 +56,7 @@ cmd(
 
     if (aki.progress >= 90) {
       const guessedName = await aki.win();
-      citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+      citel.reply(`عرفت! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
       delete games[citel.sender]; // Delete the game
       return;
     }

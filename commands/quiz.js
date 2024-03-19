@@ -59,6 +59,8 @@ cmd(
       }
     }
   }
+  }
+  
 );
 
 // Function to send the next question

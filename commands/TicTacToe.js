@@ -133,7 +133,15 @@ cmd(
       let ok;
       let isWin = !1;
       let isTie = !1;
-     
+      let isSurrender = !1;
+      if (!/^([1-9]|(me)?give_up)$/i.test(citel.text)) return;
+      isSurrender = !/^[1-9]$/.test(citel.text);
+      if (citel.sender !== room.game.currentTurn) {
+        if (!isSurrender) return !0;
+      }
+      if (
+        !isSurrender &&
+        1 >
           (ok = room.game.turn(
             citel.sender === room.game.playerO,
             parseInt(citel.text) - 1

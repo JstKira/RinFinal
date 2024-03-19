@@ -44,7 +44,7 @@ cmd(
       return;
     } else {
       // Check if the input is a valid number between 1 and 5
-      const guess = text.trim(); // Remove leading and trailing whitespace
+      const guess = citel.text; // Remove leading and trailing whitespace
       if (!/^[1-5]$/i.test(guess)) {
         citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
         return;
@@ -60,7 +60,7 @@ cmd(
 
       if (aki.progress >= 90) {
         const guessedName = await aki.win();
-        citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+        citel.reply(`عرفتت! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
         delete games[citel.sender]; // Delete the game
         return;
       }

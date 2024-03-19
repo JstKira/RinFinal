@@ -49,6 +49,15 @@ cmd(
     const hangmanString = hangmanState.join(" ");
     const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanIncorrectGuesses)}${"⬛".repeat(maxIncorrectGuesses - hangmanIncorrectGuesses)}`;
 
+    // Check if the word has been guessed completely
+    if (!hangmanState.includes("_")) {
+      await eco.give(citel.sender, "secktor", 2000); // Reward the player
+      await Void.sendMessage(citel.chat, {
+        text: `تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`,
+      });
+      return;
+    }
+
     await Void.sendMessage(citel.chat, {
       text: hangmanStatus,
     });

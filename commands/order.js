@@ -37,8 +37,6 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
 if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
-    // Reply with an error message
-    citel.reply("*رد على رسالتي*");
     return;
 } else {
     const guess = citel.text;

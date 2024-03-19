@@ -23,7 +23,7 @@ cmd(
       };
       const formattedWord = word.split('').join(' ');
       const formattedScrambledWord = scrambledWord.split('').join(' ');
-      citel.reply(`🧩 **رتب الحروف  ** 🧩\n\n*الحروف :*\n\`${formattedScrambledWord}\``);
+      citel.reply(`🧩 *رتب الحروف* 🧩\n\n*الحروف :*\n\n\`${formattedScrambledWord}\``);
     } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
     }
@@ -42,10 +42,10 @@ cmd(
 
     if (guess === game.word.toLowerCase()) {
       await eco.give(citel.sender, "secktor", 2000); // Reward the player
-      citel.reply(`🎉 **تهانينا!** لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💰.`);
+      citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 2000💰.`);
       delete games[citel.sender]; // Delete the game
     } else {
-      citel.reply(`❌ **للأسف!** هذه ليست الكلمة الصحيحة، جرب مرة أخرى!`);
+      citel.reply(`❌ *للأسف!* هذه ليست الكلمة الصحيحة، جرب مرة أخرى!`);
     }
   }
 );

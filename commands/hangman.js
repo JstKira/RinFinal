@@ -55,6 +55,9 @@ cmd(
       await Void.sendMessage(citel.chat, {
         text: `تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`,
       });
+      // Reset the game
+      hangmanState = Array(hangmanWord.length).fill("_");
+      hangmanIncorrectGuesses = 0;
       return;
     }
 

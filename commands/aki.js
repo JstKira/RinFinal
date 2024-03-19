@@ -94,7 +94,7 @@ cmd(
             quoted: citel,
           });
         } else {
-          citel.reply("عذرا، لم أتمكن من التعرف على الشخصية.");
+          citel.reply("عجزت اعرف، من كنت تفكر فيه؟");
         }
 
         delete games[citel.sender]; // Delete the game

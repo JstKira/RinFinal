@@ -58,7 +58,7 @@ cmd(
 
       await aki.step(index); // Pass the index to the Akinator API
 
-     if (aki.progress >= 90) {
+      if (aki.progress >= 90) {
         const guessedCharacter = await aki.win();
         console.log("Guessed character:", guessedCharacter); // Log the guessed character object
         const guessedName = guessedCharacter.name; // Access the name property
@@ -70,7 +70,7 @@ cmd(
         }
         delete games[citel.sender]; // Delete the game
         return;
-    } else {
+      } else {
         const question = aki.question;
         const answers = aki.answers;
 
@@ -78,6 +78,7 @@ cmd(
         const optionsText = answers.map((answer, index) => `${index + 1}. ${answer}`).join("\n");
 
         citel.reply(`${questionText}${optionsText}`);
+      }
     }
   }
 );

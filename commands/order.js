@@ -36,8 +36,9 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
+     if (citel.quoted.fromMe) {
 
-    const guess = citel.quoted.text;
+    const guess = citel.text;
     const game = games[citel.sender];
 
     if (guess === game.word.toLowerCase()) {

@@ -44,7 +44,7 @@ cmd(
       return;
     } else {
       // Check if the input is a valid number between 1 and 5
-      if (!/^[1-5]$/i.test(text)) {
+      if (!/^[1-5]$/i.test(citel.text)) {
         citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
         return;
       }

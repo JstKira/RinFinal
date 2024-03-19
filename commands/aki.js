@@ -85,7 +85,7 @@ cmd(
             caption: `
  *اييييزي!* 
 الشخصية اللي تفكر فيها هي:
-*${guessedName}*
+*${characterName}*
 `,
             headerType: 4,
           };

@@ -70,6 +70,10 @@ cmd(
     const hangmanString = hangmanState.join(" ");
     const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanIncorrectGuesses)}${"⬛".repeat(maxIncorrectGuesses - hangmanIncorrectGuesses)}`;
 
+    await Void.sendMessage(citel.chat, {
+      text: hangmanStatus,
+    });
+
     // Check if the word has been guessed completely
     if (!hangmanState.includes("_")) {
       await eco.give(citel.sender, "secktor", 2000); // Reward the player
@@ -88,9 +92,5 @@ cmd(
       deleteGame(); // Reset game data
       return;
     }
-
-    await Void.sendMessage(citel.chat, {
-      text: hangmanStatus,
-    });
   }
 );

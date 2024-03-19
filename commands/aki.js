@@ -36,10 +36,6 @@ cmd(
   }
 );
 
-const { cmd, gis } = require("../lib/");
-const { Aki } = require('aki-api');
-
-let games = {}; // Store active Akinator games with user IDs as keys
 
 cmd(
   {

@@ -6,24 +6,7 @@ const fs = require('fs');
 // Read the hangman words from the JSON file
 const hangmanWords = JSON.parse(fs.readFileSync('./lib/hangman.json'));
 
-// Object to store game data for each user
-const hangmanGames = {};
-
-function startNewGame(userId) {
-  // Select a random word from the hangmanWords array
-  const hangmanWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
-  const hangmanState = Array(hangmanWord.length).fill("_");
-  const hangmanGame = {
-    word: hangmanWord,
-    state: hangmanState,
-    incorrectGuesses: 0
-  };
-  hangmanGames[userId] = hangmanGame;
-}
-
-function deleteGame(userId) {
-  delete hangmanGames[userId];
-}
+let games = {}; // Store active games with user IDs as keys
 
 cmd(
   {
@@ -34,18 +17,18 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!citel.isGroup) return citel.reply(tlang().group);
-    
-    const userId = parseJid(citel.sender).id;
+    if (games[citel.sender]) return citel.reply("لديك لعبة نشطة بالفعل!");
 
-    // Check if the user already has an ongoing game
-    if (hangmanGames[userId]) {
-      return citel.reply("لديك لعبة مستمرة بالفعل.");
-    }
+    const hangmanWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
+    const hangmanState = Array(hangmanWord.length).fill("_");
+    games[citel.sender] = {
+      word: hangmanWord,
+      state: hangmanState,
+      incorrectGuesses: 0
+    };
 
-    startNewGame(userId);
-    
-    const hangmanString = hangmanGames[userId].state.join(" ");
-    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanGames[userId].incorrectGuesses)}${"⬛".repeat(10 - hangmanGames[userId].incorrectGuesses)}`;
+    const hangmanString = hangmanState.join(" ");
+    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(games[citel.sender].incorrectGuesses)}${"⬛".repeat(10 - games[citel.sender].incorrectGuesses)}`;
     
     return citel.reply(hangmanStatus);
   }
@@ -57,54 +40,47 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!citel.isGroup) return;
-
+    if (!games[citel.sender]) return; // No active game for the user
     if (!/^([a-z]|[أ-ي])$/i.test(citel.text)) return;
 
-    const userId = parseJid(citel.sender).id;
-
-    // Check if the user has an ongoing game
-    if (!hangmanGames[userId]) return;
-
     const guess = citel.text.toLowerCase();
-    const hangmanWord = hangmanGames[userId].word;
-    const hangmanState = hangmanGames[userId].state;
-    let hangmanIncorrectGuesses = hangmanGames[userId].incorrectGuesses;
+    const game = games[citel.sender];
 
-    if (hangmanWord.includes(guess)) {
+    if (game.word.includes(guess)) {
       // Update hangman state with correct guess
-      for (let i = 0; i < hangmanWord.length; i++) {
-        if (hangmanWord[i] === guess) {
-          hangmanState[i] = guess;
+      for (let i = 0; i < game.word.length; i++) {
+        if (game.word[i] === guess) {
+          game.state[i] = guess;
         }
       }
     } else {
-      // Update hangman state and increment incorrect guesses count
-      hangmanIncorrectGuesses++;
+      // Increment incorrect guesses count
+      game.incorrectGuesses++;
     }
 
-    const hangmanString = hangmanState.join(" ");
-    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanIncorrectGuesses)}${"⬛".repeat(10 - hangmanIncorrectGuesses)}`;
+    const hangmanString = game.state.join(" ");
+    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(game.incorrectGuesses)}${"⬛".repeat(10 - game.incorrectGuesses)}`;
 
     await Void.sendMessage(citel.chat, {
       text: hangmanStatus,
     });
 
     // Check if the word has been guessed completely
-    if (!hangmanState.includes("_")) {
+    if (!game.state.includes("_")) {
       await eco.give(citel.sender, "secktor", 2000); // Reward the player
       await Void.sendMessage(citel.chat, {
         text: `تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`,
       });
-      deleteGame(userId); // Delete the game data
+      delete games[citel.sender]; // Delete the game
       return;
     }
 
     // Check if the maximum number of incorrect guesses has been reached
-    if (hangmanIncorrectGuesses >= 10) {
+    if (game.incorrectGuesses >= 10) {
       await Void.sendMessage(citel.chat, {
-        text: `لقد انتهت محاولات اللعب، الكلمة الصحيحة كانت: ${hangmanWord}`,
+        text: `لقد انتهت محاولات اللعب، الكلمة الصحيحة كانت: ${game.word}`,
       });
-      deleteGame(userId); // Delete the game data
+      delete games[citel.sender]; // Delete the game
       return;
     }
   }

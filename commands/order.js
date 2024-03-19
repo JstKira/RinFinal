@@ -37,7 +37,7 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
 
-    if (citel.quoted.sender === conn.user.id) {
+    if (citel.quoted.isBot) {
       const guess = citel.text;
       const game = games[citel.sender];
 

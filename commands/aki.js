@@ -44,12 +44,12 @@ cmd(
       return;
     } else {
       // Check if the input is a valid number between 1 and 5
-      if (!/^[1-5]$/i.test(text)) {
+      const guess = text.trim(); // Remove leading and trailing whitespace
+      if (!/^[1-5]$/i.test(guess)) {
         citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
         return;
       }
 
-      const guess = text.toLowerCase(); // Treat the input as lowercase letters
       const game = games[citel.sender];
       const aki = game.aki;
 

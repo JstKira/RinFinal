@@ -41,12 +41,10 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
 
-    const guess = Number(text);
+    const guess = text.toLowerCase(); // Treat the input as lowercase letters
 
-    console.log("Received guess:", guess);
-
-    // Check if the input is a valid number within the range of options provided by Akinator
-    if (isNaN(guess) || guess < 1 || guess > 5) {
+    // Check if the input is a valid number between 1 and 5
+    if (!/^[1-5]$/i.test(guess)) {
       citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
       return;
     }
@@ -54,11 +52,14 @@ cmd(
     const game = games[citel.sender];
     const aki = game.aki;
 
-    await aki.step(guess - 1); // Adjust index since Akinator answers are 0-based
+    // Convert the number to an index
+    const index = parseInt(guess) - 1;
+
+    await aki.step(index); // Pass the index to the Akinator API
 
     if (aki.progress >= 90) {
       const guessedName = await aki.win();
-      citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+      citel.reply(`عرفت! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
       delete games[citel.sender]; // Delete the game
       return;
     }

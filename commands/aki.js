@@ -41,7 +41,7 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
 
-    const guess = parseInt(text);
+    const guess = Number(text);
 
     // Check if the input is a valid number within the range of options provided by Akinator
     if (isNaN(guess) || guess < 1 || guess > 5) {

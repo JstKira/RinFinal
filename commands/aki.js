@@ -12,7 +12,7 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!games[citel.sender]) {
-      const region = 'en'; // You can change the region if needed
+      const region = 'ar'; // You can change the region if needed
       const aki = new Aki({ region });
       
       await aki.start();

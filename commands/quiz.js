@@ -5,8 +5,15 @@ const eco = require('discord-mongoose-economy');
 // Load quiz questions from JSON file
 const quizQuestions = JSON.parse(fs.readFileSync('./lib/quiz.json'));
 
+
+
 // Store active quiz games with user IDs as keys
 let currentGame = {};
+
+// Function to generate a random integer within a specified range
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 // Create a command to start the quiz when the user sends "س"
 cmd(
@@ -33,6 +40,7 @@ cmd(
   }
 );
 
+
 // Listen for text messages to answer the quiz question
 cmd(
   {
@@ -47,7 +55,7 @@ cmd(
     const guess = citel.text; // Convert input to lowercase for case-insensitive comparison
     const currentQuestion = quizQuestions[0]; // Only one question for each game
     
-    // Check if the user's guess matches the correct answer
+     // Check if the user's guess matches the correct answer
     if (guess === currentQuestion.answer.toLowerCase()) {
       // Reward the player with some virtual currency (adjust as needed)
       await eco.give(citel.sender, "secktor", 500);
@@ -59,7 +67,4 @@ cmd(
     // End the game after the user's response
     delete currentGame[citel.sender];
   }
-  }
-  
-
 );

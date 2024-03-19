@@ -2,7 +2,7 @@ const { cmd, getRandomInt } = require('../lib');
 const fs = require('fs');
 
 // Load quiz questions from JSON file
-const quizQuestions = JSON.parse(fs.readFileSync('../lib/quiz.json'));
+const quizQuestions = JSON.parse(fs.readFileSync('./lib/quiz.json'));
 
 let currentQuestionIndex = 0;
 let userScore = 0;

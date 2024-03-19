@@ -6,8 +6,17 @@ const fs = require('fs');
 // Read the hangman words from the JSON file
 const hangmanWords = JSON.parse(fs.readFileSync('./lib/hangman.json'));
 
-let hangmanData = null; // Variable to store hangman game data
-const maxIncorrectGuesses = 6; // Maximum allowed incorrect guesses
+let hangmanWord;
+let hangmanState;
+let hangmanIncorrectGuesses;
+let maxIncorrectGuesses = 6
+
+function startNewGame() {
+  // Select a random word from the hangmanWords array
+  hangmanWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
+  hangmanState = Array(hangmanWord.length).fill("_");
+  hangmanIncorrectGuesses = 0;
+}
 
 cmd(
   {
@@ -18,22 +27,11 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!citel.isGroup) return citel.reply(tlang().group);
-  
-
-    // Select a random word from the hangmanWords array
-    const hangmanWord = hangmanWords[Math.floor(Math.random() * hangmanWords.length)];
-    const hangmanState = Array(hangmanWord.length).fill("_");
-
-    hangmanData = {
-      word: hangmanWord,
-      state: hangmanState,
-      incorrectGuesses: 0,
-      maxIncorrectGuesses: maxIncorrectGuesses,
-      chat: citel.chat
-    };
+    
+    startNewGame();
     
     const hangmanString = hangmanState.join(" ");
-    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanData.incorrectGuesses)}${"⬛".repeat(maxIncorrectGuesses - hangmanData.incorrectGuesses)}`;
+    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanIncorrectGuesses)}${"⬛".repeat(maxIncorrectGuesses - hangmanIncorrectGuesses)}`;
     
     return citel.reply(hangmanStatus);
   }
@@ -46,40 +44,38 @@ cmd(
   async (Void, citel, text) => {
     if (!citel.isGroup) return;
 
-    if (!hangmanData) return citel.reply("لا يوجد لعبة مشنقة جارية حاليًا. استخدم .hangman لبدء لعبة جديدة.");
-
     if (!/^([a-z]|[أ-ي])$/i.test(citel.text)) return;
 
     const guess = citel.text.toLowerCase();
-    if (hangmanData.word.includes(guess)) {
+    if (hangmanWord.includes(guess)) {
       // Update hangman state with correct guess
-      for (let i = 0; i < hangmanData.word.length; i++) {
-        if (hangmanData.word[i] === guess) {
-          hangmanData.state[i] = guess;
+      for (let i = 0; i < hangmanWord.length; i++) {
+        if (hangmanWord[i] === guess) {
+          hangmanState[i] = guess;
         }
       }
     } else {
       // Update hangman state and increment incorrect guesses count
-      hangmanData.incorrectGuesses++;
+      hangmanIncorrectGuesses++;
     }
 
-    const hangmanString = hangmanData.state.join(" ");
-    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanData.incorrectGuesses)}${"⬛".repeat(hangmanData.maxIncorrectGuesses - hangmanData.incorrectGuesses)}`;
+    const hangmanString = hangmanState.join(" ");
+    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(hangmanIncorrectGuesses)}${"⬛".repeat(maxIncorrectGuesses - hangmanIncorrectGuesses)}`;
 
-    // Check if the word has been guessed completely or if the user ran out of attempts
-    if (!hangmanData.state.includes("_") || hangmanData.incorrectGuesses >= hangmanData.maxIncorrectGuesses) {
-      if (!hangmanData.state.includes("_")) {
-        await eco.give(citel.sender, "secktor", 2000); // Reward the player for winning
-        await Void.sendMessage(citel.chat, {
-          text: `تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`,
-        });
-      } else {
-        await Void.sendMessage(citel.chat, {
-          text: `لقد انتهت محاولاتك للتخمين. الكلمة الصحيحة هي: ${hangmanData.word}`,
-        });
-      }
-      // Reset hangman game data
-      hangmanData = null;
+    // Check if the word has been guessed completely
+    if (!hangmanState.includes("_")) {
+      await eco.give(citel.sender, "secktor", 2000); // Reward the player
+      await Void.sendMessage(citel.chat, {
+        text: `تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`,
+      });
+      return;
+    }
+
+    // Check if the maximum number of incorrect guesses has been reached
+    if (hangmanIncorrectGuesses >= maxIncorrectGuesses) {
+      await Void.sendMessage(citel.chat, {
+        text: `لقد انتهت محاولات اللعب، الكلمة الصحيحة كانت: ${hangmanWord}`,
+      });
       return;
     }
 

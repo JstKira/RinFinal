@@ -29,12 +29,13 @@ cmd(
       const questionText = `*سؤال:* ${question}\n\n*خيارات:*\n\n`;
       const optionsText = answers.map((answer, index) => `${index + 1}. ${answer}`).join("\n");
 
-      citel.reply(`🧞 *لعبة المارد* 🧞\n\n${questionText}${optionsText}`);
+      citel.reply(`${questionText}${optionsText}`);
     } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
     }
   }
 );
+
 
 cmd(
   {
@@ -60,31 +61,45 @@ cmd(
 
       await aki.step(index); // Pass the index to the Akinator API
 
-     if (aki.progress >= 90) {
+      if (aki.progress >= 90) {
         const guessedCharacter = await aki.win();
-        console.log("Guessed character:", guessedCharacter); // Log the guessed character object
-        const guessedName = guessedCharacter.name; // Access the name property
-        console.log("Guessed name:", guessedName); // Log the guessed name
-        if (guessedName) {
-            // Styled caption
-            const caption = `
+        const guesses = guessedCharacter.guesses;
+        const guessCount = guessedCharacter.guessCount;
+
+        // Loop through the guesses to find a valid name and picture
+        let characterName, characterImageUrl;
+        for (const guess of guesses) {
+          if (guess.name && guess.picture_path) {
+            characterName = guess.name;
+            characterImageUrl = guess.absolute_picture_path;
+            break; // Found a valid name and picture, exit the loop
+          }
+        }
+
+        if (characterName && characterImageUrl) {
+          // Send picture with caption
+          const buttonMessage = {
+            image: {
+              url: characterImageUrl,
+            },
+            caption: `
  *اييييزي!* 
 الشخصية اللي تفكر فيها هي:
 *${guessedName}*
-`;
-            citel.reply("", {
-              image: {
-                url: guessedCharacter.absolute_picture_path,
-              },
-              caption: caption,
-              quoted: citel,
-            });
+`,
+            headerType: 4,
+          };
+
+          Void.sendMessage(citel.chat, buttonMessage, {
+            quoted: citel,
+          });
         } else {
-            citel.reply("عذرا، لم أتمكن من التعرف على الشخصية.");
+          citel.reply("عذرا، لم أتمكن من التعرف على الشخصية.");
         }
+
         delete games[citel.sender]; // Delete the game
         return;
-    } else {
+      } else {
         const question = aki.question;
         const answers = aki.answers;
 
@@ -92,8 +107,7 @@ cmd(
         const optionsText = answers.map((answer, index) => `${index + 1}. ${answer}`).join("\n");
 
         citel.reply(`${questionText}${optionsText}`);
+      }
     }
   }
-  }
 );
-

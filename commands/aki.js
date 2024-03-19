@@ -59,25 +59,25 @@ cmd(
       await aki.step(index); // Pass the index to the Akinator API
 
      if (aki.progress >= 90) {
-    const guessedCharacter = await aki.win();
-    console.log("Guessed character:", guessedCharacter); // Log the guessed character object
-    const guessedName = guessedCharacter.name; // Access the name property
-    console.log("Guessed name:", guessedName); // Log the guessed name
-    if (guessedName) {
-        citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+        const guessedCharacter = await aki.win();
+        console.log("Guessed character:", guessedCharacter); // Log the guessed character object
+        const guessedName = guessedCharacter.name; // Access the name property
+        console.log("Guessed name:", guessedName); // Log the guessed name
+        if (guessedName) {
+            citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+        } else {
+            citel.reply("عذرا، لم أتمكن من التعرف على الشخصية.");
+        }
+        delete games[citel.sender]; // Delete the game
+        return;
     } else {
-        citel.reply("عذرا، لم أتمكن من التعرف على الشخصية.");
-    }
-    delete games[citel.sender]; // Delete the game
-    return;
+        const question = aki.question;
+        const answers = aki.answers;
 
-      const question = aki.question;
-      const answers = aki.answers;
+        const questionText = `*سؤال:* ${question}\n\n*خيارات:*\n\n`;
+        const optionsText = answers.map((answer, index) => `${index + 1}. ${answer}`).join("\n");
 
-      const questionText = `*سؤال:* ${question}\n\n*خيارات:*\n\n`;
-      const optionsText = answers.map((answer, index) => `${index + 1}. ${answer}`).join("\n");
-
-      citel.reply(`${questionText}${optionsText}`);
+        citel.reply(`${questionText}${optionsText}`);
     }
   }
 );

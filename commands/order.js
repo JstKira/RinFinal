@@ -36,19 +36,22 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
+if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+    // Reply with an error message
+    citel.reply("*رد على رسالتي*");
+    return;
+} else {
+    const guess = citel.text;
+    const game = games[citel.sender];
 
-    if (citel.quoted.isBot) {
-      const guess = citel.text;
-      const game = games[citel.sender];
-
-      if (guess === game.word.toLowerCase()) {
+    if (guess === game.word.toLowerCase()) {
         await eco.give(citel.sender, "secktor", 500); // Reward the player
         citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
         delete games[citel.sender]; // Delete the game
-      } else {
+    } else {
         citel.reply(`❌ *خطأ*`);
-      }
     }
+}
   }
 );
 

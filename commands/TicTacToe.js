@@ -133,15 +133,7 @@ cmd(
       let ok;
       let isWin = !1;
       let isTie = !1;
-      let isSurrender = !1;
-      if (!/^([1-9]|(me)?give_up|surr?ender|off)$/i.test(citel.text)) return;
-      isSurrender = !/^[1-9]$/.test(citel.text);
-      if (citel.sender !== room.game.currentTurn) {
-        if (!isSurrender) return !0;
-      }
-      if (
-        !isSurrender &&
-        1 >
+     
           (ok = room.game.turn(
             citel.sender === room.game.playerO,
             parseInt(citel.text) - 1
@@ -218,6 +210,44 @@ ${
     }
   }
 );
+
+
+
+
+//===============================================
+
+cmd(
+  {
+    pattern: "حوم",
+    desc: " لعبة حجرة ورقة مقص",
+    category: "العاب",
+  },
+  async (Void, citel, text) => {
+    if (!citel.isGroup) return citel.reply(tlang().group);
+    let { prefix } = require('../lib')
+    let choices = ["حجرة", "ورقة", "مقص"];
+    let randomIndex = Math.floor(Math.random() * choices.length);
+    let botChoice = choices[randomIndex];
+    let userChoice = text.toLowerCase();
+    if (!choices.includes(userChoice)) {
+      return citel.reply("اختر بين: حجرة، ورقة، مقص.");
+    }
+    if (botChoice === userChoice) {
+      return citel.reply("تعادل!");
+    }
+    if (
+      (botChoice === "حجرة" && userChoice === "مقص") ||
+      (botChoice === "ورقة" && userChoice === "حجرة") ||
+      (botChoice === "مقص" && userChoice === "ورقة")
+    ) {
+      return citel.reply(`أنا اخترت ${botChoice}، فزت عليك!`);
+    } else {
+      return citel.reply(`أنا اخترت ${botChoice}، لقد فزت!`);
+    }
+  }
+);
+
+//===============================================================
 
 cmd({ pattern: "صداقة" , category: "ترفيه" }, async(Void, citel, text) => {
     const { tlang } = require('../lib')

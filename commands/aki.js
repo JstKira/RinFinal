@@ -41,6 +41,12 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
 
+    // Ensure that text is a string before calling toLowerCase
+    if (typeof text !== 'string') {
+      citel.reply("الرجاء اختيار رقم صحيح بين 1 و 5 للإجابة على السؤال.");
+      return;
+    }
+
     const guess = text.toLowerCase(); // Treat the input as lowercase letters
 
     // Check if the input is a valid number between 1 and 5
@@ -59,7 +65,7 @@ cmd(
 
     if (aki.progress >= 90) {
       const guessedName = await aki.win();
-      citel.reply(`عرفت! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
+      citel.reply(`تهانينا! أعتقد أن الشخصية التي كنت تفكر فيها هي: *${guessedName}*`);
       delete games[citel.sender]; // Delete the game
       return;
     }

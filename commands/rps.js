@@ -1,7 +1,3 @@
-const { cmd, parseJid, getAdmin, tlang } = require("../lib/");
-const eco = require('discord-mongoose-economy')
-const ty = eco.connect(mongodb);
-
 cmd(
   {
     pattern: "حوم",
@@ -26,8 +22,7 @@ cmd(
       (botChoice === "ورقة" && userChoice === "حجرة") ||
       (botChoice === "مقص" && userChoice === "ورقة")
     )  {
-      await eco.give(citel.sender, "secktor", 500); // Reward for winning
-      return citel.reply(`أنا اخترت ${botChoice}، فزت عليك! وحصلت على 500 💎`);
+      return citel.reply(`أنا اخترت ${botChoice}، فزت عليك!`);
     } else {
       return citel.reply(`أنا اخترت ${botChoice}، لقد فزت!`);
     }

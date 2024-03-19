@@ -14,17 +14,19 @@ cmd(
     category: "العاب",
   },
   async (Void, citel, text) => {
-    if (!citel.isGroup) return citel.reply(tlang().group);
-    if (games[citel.sender]) return citel.reply("لديك لعبة نشطة بالفعل!");
-
-    const word = wordList[Math.floor(Math.random() * wordList.length)];
-    const scrambledWord = scrambleWord(word);
-    games[citel.sender] = {
-      word: word,
-      scrambledWord: scrambledWord
-    };
-
-    return citel.reply(`الكلمة المختارة: ${scrambledWord}`);
+    if (!games[citel.sender]) {
+      const word = wordList[Math.floor(Math.random() * wordList.length)];
+      const scrambledWord = scrambleWord(word);
+      games[citel.sender] = {
+        word: word,
+        scrambledWord: scrambledWord
+      };
+      const formattedWord = word.split('').join(' ');
+      const formattedScrambledWord = scrambledWord.split('').join(' ');
+      citel.reply(`🧩 **رتب الحروف  ** 🧩\n\n*الحروف :*\n\`${formattedScrambledWord}\``);
+    } else {
+      citel.reply("لديك لعبة نشطة بالفعل!");
+    }
   }
 );
 
@@ -33,7 +35,6 @@ cmd(
     on: "text"
   },
   async (Void, citel, text) => {
-    if (!citel.isGroup) return;
     if (!games[citel.sender]) return; // No active game for the user
 
     const guess = citel.text.toLowerCase();
@@ -41,14 +42,10 @@ cmd(
 
     if (guess === game.word.toLowerCase()) {
       await eco.give(citel.sender, "secktor", 2000); // Reward the player
-      await Void.sendMessage(citel.chat, {
-        text: `تهانينا! لقد حزرت الشخصية بشكل صحيح وفزت ب 2000💎.`,
-      });
+      citel.reply(`🎉 **تهانينا!** لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💰.`);
       delete games[citel.sender]; // Delete the game
     } else {
-      await Void.sendMessage(citel.chat, {
-        text: `خطا , جرب مرة أخرى!`,
-      });
+      citel.reply(`❌ **للأسف!** هذه ليست الكلمة الصحيحة، جرب مرة أخرى!`);
     }
   }
 );

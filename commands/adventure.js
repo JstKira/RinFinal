@@ -1,6 +1,6 @@
 const { cmd } = require('../lib');
-const { sck1 } = require('./lib/database/user.js');
-const { RandomXP } = require('./lib/database/xp.js');
+const { sck1 } = require('../lib/database/user');
+const { RandomXP } = require('../lib/database/xp');
 const fs = require('fs');
 
 // Define cooldown duration (5 minutes)

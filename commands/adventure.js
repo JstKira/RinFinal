@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { cmd } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');

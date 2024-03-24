@@ -1,23 +1,7 @@
-const mongoose = require('mongoose');
-const { cmd } = require('../lib');
-const fs = require('fs');
+const { cmd, getRandomInt } = require('../lib');
 const { sck1 } = require('../lib/database/user');
-const { RandomXP } = require('../lib/database/xp');
-const MONGODB_URI = process.env.MONGODB_URI; // Make sure you have set up the MONGODB_URI environment variable
+const fs = require('fs');
 
-// Connect to MongoDB
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log("Connected to MongoDB");
-})
-.catch(err => {
-  console.error("Error connecting to MongoDB:", err);
-});
-
-// Define cooldown duration (5 minutes)
 const COOLDOWN_DURATION = 5 * 60 * 1000;
 
 cmd(
@@ -42,17 +26,11 @@ cmd(
 
     try {
       // Fetch user from the database
-     let user = await sck1.findOne({ id: userId });
+      let user = await sck1.findOne({ id: userId });
 
       // Check if user exists
       if (!user) {
         citel.reply("User not found");
-        return;
-      }
-
-      // Check user's level
-      if (user.level < 20) {
-        citel.reply("يجب أن تكون على مستوى 20 أو أعلى لاستخدام هذا الأمر.");
         return;
       }
 
@@ -112,26 +90,8 @@ cmd(
   }
 );
 
-// Function to generate a random integer between min and max (inclusive)
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 // Function to load rewards from items.json file
 function loadRewards() {
   const itemsData = fs.readFileSync('./lib/items.json');
   const items = JSON.parse(itemsData);
-  const rarityKeys = Object.keys(items);
-  const inventory = [];
-
-  rarityKeys.forEach(rarity => {
-    items[rarity].forEach(item => {
-      inventory.push({
-        name: item.name,
-        quantity: getRandomInt(1, 5), // Random quantity between 1 and 5
-      });
-    });
-  });
-
-  return { inventory };
-}
+ 

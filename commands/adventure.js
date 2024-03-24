@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/*const mongoose = require('mongoose');
 const { cmd } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
@@ -131,3 +131,4 @@ function formatTime(milliseconds) {
 
   return `${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية`;
 }
+*/

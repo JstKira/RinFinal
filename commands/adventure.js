@@ -101,7 +101,7 @@ function loadRewards() {
     items[rarity].forEach(item => {
       inventory.push({
         name: item.name,
-        quantity: getRandomInt(1, 5), // Random quantity between 1 and 5
+        quantity: getRandomInt(1, 3), // Random quantity between 1 and 5
       });
     });
   });

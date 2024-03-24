@@ -28,7 +28,7 @@ mongoose.connection.on('disconnected', () => {
 
 // Define the cooldown time for hunting and the time before sending the results
 const cooldown = 259200000; // 3 days
-const cooldownn = 180000; // 3 minutes
+const cooldownn = 10000; // 10s
 
 cmd(
   {

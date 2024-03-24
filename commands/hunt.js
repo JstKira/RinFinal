@@ -137,7 +137,7 @@ cmd({
                                 user.قرد += animals[7].animal;
                                 user.دجاجة += animals[9].animal;
 
-                                / Send the hunting results message with the image
+                                // Send the hunting results message with the image
                                 setTimeout(() => {
                                     const buttonMessage = {
                                         image: {

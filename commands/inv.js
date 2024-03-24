@@ -1,4 +1,4 @@
-const { cmd } = require('../lib');
+/*const { cmd } = require('../lib');
 const mongoose = require('mongoose');
 
 // Connect to MongoDB database using environment variable
@@ -43,3 +43,4 @@ cmd(
     }
   }
 );
+*/

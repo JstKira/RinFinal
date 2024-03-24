@@ -1,4 +1,5 @@
-const { cmd, getRandomInt } = require('../lib');
+const { cmd } = require('../lib');
+const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
 const fs = require('fs');
 
@@ -33,6 +34,7 @@ cmd(
         citel.reply("User not found");
         return;
       }
+
 
       // Check user's health
       if (user.health < 20) {
@@ -90,8 +92,26 @@ cmd(
   }
 );
 
+// Function to generate a random integer between min and max (inclusive)
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // Function to load rewards from items.json file
 function loadRewards() {
   const itemsData = fs.readFileSync('./lib/items.json');
   const items = JSON.parse(itemsData);
- 
+  const rarityKeys = Object.keys(items);
+  const inventory = [];
+
+  rarityKeys.forEach(rarity => {
+    items[rarity].forEach(item => {
+      inventory.push({
+        name: item.name,
+        quantity: getRandomInt(1, 5), // Random quantity between 1 and 5
+      });
+    });
+  });
+
+  return { inventory };
+}

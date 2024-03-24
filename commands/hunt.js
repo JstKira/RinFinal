@@ -4,26 +4,6 @@ const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
 const axios = require('axios')
 const fetch = require('node-fetch')
-const mongoURI = process.env.MONGODB_URI;
-
-// Connect to MongoDB
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// Event handlers for MongoDB connection
-mongoose.connection.on('connected', () => {
-  console.log('Connected to MongoDB');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error('MongoDB connection error:', err);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('Disconnected from MongoDB');
-});
 
 
 // Define the cooldown time for hunting and the time before sending the results

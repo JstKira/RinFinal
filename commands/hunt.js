@@ -134,8 +134,8 @@ setTimeout(() => {
 
 // Update the last hunt time
 user.lasthunt = new Date() * 1;
-    } catch (err) {
-      console.error(err);
+    } catch {
+      console.error("حدث خطأ أثناء تنفيذ الأمر.");
       citel.reply("حدث خطأ أثناء تنفيذ الأمر.");
     }
   }

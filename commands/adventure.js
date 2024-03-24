@@ -1,6 +1,6 @@
 const { cmd } = require('../lib');
-const { sck1 } = require('./lib/database/user');
-const { RandomXP } = require('./lib/database/xp');
+const { sck1 } = require('./lib/database/user.js');
+const { RandomXP } = require('./lib/database/xp.js');
 const fs = require('fs');
 
 // Define cooldown duration (5 minutes)
@@ -88,7 +88,7 @@ function getRandomInt(min, max) {
 
 // Function to load rewards from items.json file
 function loadRewards() {
-  const itemsData = fs.readFileSync('./items.json');
+  const itemsData = fs.readFileSync('./lib/items.json');
   const items = JSON.parse(itemsData);
   const rarityKeys = Object.keys(items);
   const inventory = [];

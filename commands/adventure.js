@@ -40,7 +40,7 @@ cmd(
 
     try {
       // Fetch user from the database
-      let user = await ty.sck1.findOne({ id: userId });
+     let user = await sck1.findOne({ id: userId });
 
       // Check if user exists
       if (!user) {

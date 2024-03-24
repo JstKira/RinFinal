@@ -10,8 +10,6 @@ const cooldown = 900000; // 15 minutes
 function ranNum(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-const mongoose = require('mongoose');
-require('dotenv').config();
 
 // Retrieve MongoDB connection URI from environment variable
 const mongoURI = process.env.MONGODB_URI;

@@ -1,7 +1,9 @@
+const mongoose = require('mongoose');
 const { cmd } = require('../lib');
-const { sck1 } = require('../lib/database/user');
-const { RandomXP } = require('../lib/database/xp');
 const fs = require('fs');
+
+// Connect to MongoDB using eco
+const ty = eco.connect(mongodb);
 
 // Define cooldown duration (5 minutes)
 const COOLDOWN_DURATION = 5 * 60 * 1000;
@@ -28,17 +30,17 @@ cmd(
 
     try {
       // Fetch user from the database
-      let user = await sck1.findOne({ id: userId });
+      let user = await ty.sck1.findOne({ id: userId });
 
       // Check if user exists
       if (!user) {
-        citel.reply("مالقيت لك بيانات بالداتا بيس، اول مرة تستخدم البوت؟");
+        citel.reply("User not found");
         return;
       }
 
       // Check user's level
       if (user.level < 20) {
-        citel.reply("*يجب أن تكون على مستوى 20 أو أعلى لاستخدام هذا الأمر.*");
+        citel.reply("يجب أن تكون على مستوى 20 أو أعلى لاستخدام هذا الأمر.");
         return;
       }
 
@@ -78,7 +80,7 @@ cmd(
         console.log('No changes made to inventory');
       }
 
-      citel.reply(`غامرت وتلقيت ضربة! صحتك الآن: ${user.health}`);
+      citel.reply(`لقد مغامرت وتلقيت ضربة! صحتك الآن: ${user.health}`);
 
       // Send a separate message for rewards
       if (rewards.inventory.length > 0) {
@@ -88,7 +90,7 @@ cmd(
 
       // Check if user's health reached zero
       if (user.health === 0) {
-        citel.reply("نقاط صحتك صفّرت! تحتاج إلى الراحة والشفاء.");
+        citel.reply("لقد فقدت جميع صحتك! تحتاج إلى الراحة والشفاء.");
         return;
       }
     } catch (error) {

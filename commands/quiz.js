@@ -59,7 +59,7 @@ cmd(
     if (guess === currentQuestion.answer.toLowerCase()) {
       // Reward the player with some virtual currency (adjust as needed)
       await eco.give(citel.sender, "secktor", 500);
-      citel.reply(`🎉 *تهانينا!* لقد أجبت بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
+      citel.reply(`🎉 *لقد أجبت بشكل صحيح وفزت بمكافأة قيمتها 500 💰`);
     } else {
       citel.reply(`❌ *خطأ!* الإجابة الصحيحة هي: ${currentQuestion.answer}`);
     }

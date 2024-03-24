@@ -1,7 +1,6 @@
 const { cmd } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
-const fs = require('fs');
 
 const COOLDOWN_DURATION = 5 * 60 * 1000;
 
@@ -13,8 +12,9 @@ cmd(
     filename: __filename,
     level: 20, // Minimum level required to use this command
   },
-  async (Void, citel, userId) => { // Assuming userId is passed as an argument
+  async (Void, citel) => {
     const currentTime = Date.now();
+    const userId = citel.sender;
 
     // Function to format time in HH:MM:SS format
     function formatTime(milliseconds) {
@@ -31,10 +31,15 @@ cmd(
 
       // Check if user exists
       if (!user) {
-        citel.reply("User not found");
-        return;
+        // If user not found, create a new user document
+        user = await sck1.create({ id: userId });
       }
 
+      // Check user's level
+      if (user.level < 20) {
+        citel.reply("يجب أن تكون على مستوى 20 أو أعلى لاستخدام هذا الأمر.");
+        return;
+      }
 
       // Check user's health
       if (user.health < 20) {
@@ -63,14 +68,7 @@ cmd(
       }
 
       // Update user's health and inventory in the database
-      const result = await sck1.updateOne({ id: userId }, { $addToSet: { inventory: { $each: rewards.inventory } } });
-
-      // Check if update was successful
-      if (result.nModified > 0) {
-        console.log('Inventory updated successfully');
-      } else {
-        console.log('No changes made to inventory');
-      }
+      await sck1.updateOne({ id: userId }, user);
 
       citel.reply(`لقد مغامرت وتلقيت ضربة! صحتك الآن: ${user.health}`);
 

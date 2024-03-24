@@ -1,9 +1,29 @@
 const mongoose = require('mongoose');
 const { cmd, prefix } = require('../lib');
-const  RandomXP = require('../lib/database/xp');
-const { sck1 }  = require('../lib/database/user');
+const { RandomXP } = require('../lib/database/xp');
+const { sck1 } = require('../lib/database/user');
 const axios = require('axios')
 const fetch = require('node-fetch')
+const mongoURI = process.env.MONGODB_URI;
+
+// Connect to MongoDB
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Event handlers for MongoDB connection
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Disconnected from MongoDB');
+});
 
 
 // Define the cooldown time for hunting and the time before sending the results
@@ -24,15 +44,15 @@ cmd(
         await user.save();
       }
 
+      // Check if the user has required items for hunting
+      if (user.armor === 0 || user.sword === 0 || user.bow === 0) {
+        return citel.reply(`يجب صنع الدروع، السيوف، والأقواس أولاً.\n\nلديك:\n━ 🥼 ${user.armor} درع\n━ ⚔️ ${user.sword} سيف\n━ 🏹 ${user.bow} قوس`);
+      }
+
       // Check if the user is on cooldown for hunting
       if (new Date() - user.lasthunt <= cooldown) {
         const remainingTime = cooldown - (new Date() - user.lasthunt);
         return citel.reply(`لقد قمت بالصيد مؤخرا، الرجاء الانتظار\n*🕐${(remainingTime / 86400000).toFixed(0)} يوم*`);
-      }
-
-      // Check if the user has required items for hunting
-      if (user.armor === 0 || user.sword === 0 || user.bow === 0) {
-        return citel.reply(`يجب صنع الدروع، السيوف، والأقواس أولاً.\n\nلديك:\n━ 🥼 ${user.armor} درع\n━ ⚔️ ${user.sword} سيف\n━ 🏹 ${user.bow} قوس`);
       }
 
       // Array of animals to be hunted
@@ -73,8 +93,7 @@ cmd(
         user.bowdurability = 0;
         user.bow = 0;
       }
-
-      // Send the hunting results message after a delay
+ // Send the hunting results message after a delay
       setTimeout(() => {
         // Add hunted animals to user's inventory
         user.ثور += animals[0].animal;
@@ -88,7 +107,6 @@ cmd(
         user.قرد += animals[7].animal;
         user.دجاجة += animals[9].animal;
 
-       
         // Send hunting results message with the image
         setTimeout(() => {
           const buttonMessage = {
@@ -112,10 +130,10 @@ cmd(
         // Update the last hunt time
         user.lasthunt = new Date() * 1;
       });
-    } 
-    catch (error) {
+    } catch (error) {
       console.error("حدث خطأ أثناء تنفيذ الأمر:", error);
       citel.reply("حدث خطأ أثناء تنفيذ الأمر.");
     }
   }
+);
 );

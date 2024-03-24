@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const { cmd, prefix } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
@@ -110,31 +109,33 @@ cmd(
         user.دجاجة += animals[9].animal;
 
        
- // Send hunting results message with the image
-setTimeout(() => {
-  const buttonMessage = {
-    image: {
-      url: 'https://telegra.ph/file/295a6d5105771875e1797.jpg',
-    },
-    caption: `*${resultMsg}*`,
-    headerType: 4,
-  };
+        // Send hunting results message with the image
+        setTimeout(() => {
+          const buttonMessage = {
+            image: {
+              url: 'https://telegra.ph/file/295a6d5105771875e1797.jpg',
+            },
+            caption: `*${resultMsg}*`,
+            headerType: 4,
+          };
 
-  Void.sendMessage(citel.chat, buttonMessage, {
-    quoted: citel,
-  });
-}, cooldownn);
-         
+          Void.sendMessage(citel.chat, buttonMessage, {
+            quoted: citel,
+          });
+        }, cooldownn);
 
-      // Send a message indicating the start of hunting
-      // Send a message indicating the start of hunting
-setTimeout(() => {
-  citel.reply('_الصيد بدأ..._');
-}, 0);
+        // Send a message indicating the start of hunting
+        setTimeout(() => {
+          citel.reply('_الصيد بدأ..._');
+        }, 0);
 
-// Update the last hunt time
-user.lasthunt = new Date() * 1;
+        // Update the last hunt time
+        user.lasthunt = new Date() * 1;
+      });
     } 
+    catch (error) {
+      console.error("حدث خطأ أثناء تنفيذ الأمر:", error);
+      citel.reply("حدث خطأ أثناء تنفيذ الأمر.");
     }
   }
 );

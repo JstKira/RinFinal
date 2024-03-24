@@ -68,7 +68,7 @@ cmd(
       }
 
       // Constructing the hunting results message
-      let resultMsg = `[ انتهى الصيد ]\nنتائج صيد اليوم :\n\n`;
+      let resultMsg = `[ *انتهى الصيد* ]\nنتائج صيد اليوم :\n\n`;
       resultMsg += ` *🐂 = [ ${animals[0].animal} ]*             *🐃 = [ ${animals[5].animal} ]*\n`;
       resultMsg += ` *🐅 = [ ${animals[1].animal} ]*             *🐮 = [ ${animals[6].animal} ]*\n`;
       resultMsg += ` *🐘 = [ ${animals[2].animal} ]*             *🐒 = [ ${animals[7].animal} ]*\n`;
@@ -115,7 +115,7 @@ cmd(
             image: {
               url: 'https://telegra.ph/file/295a6d5105771875e1797.jpg',
             },
-            caption: `*${resultMsg}*`,
+            caption: `${resultMsg}`,
             headerType: 4,
           };
 

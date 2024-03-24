@@ -1,134 +1,109 @@
-/*const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const { cmd } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
 const fs = require('fs');
 
+// Define the cooldown time for the adventure
+const cooldown = 900000; // 15 minutes
+// Define a function to generate a random number between min and max (inclusive)
+function ranNum(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-// Connect to MongoDB database using environment variable
+// Retrieve MongoDB connection URI from environment variable
 const mongoURI = process.env.MONGODB_URI;
+
+// Connect to MongoDB
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB database');
+
+// Event handlers for MongoDB connection
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
 });
 
-// Import the user schema
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
 
-const COOLDOWN_DURATION = 5 * 60 * 1000;
-const MAX_REWARDS = 7; // Maximum number of rewards
+mongoose.connection.on('disconnected', () => {
+  console.log('Disconnected from MongoDB');
+});
+
+// Include the command code here
+
+
 
 cmd(
   {
     pattern: "مغامرة",
-    desc: "المغامرة في الأماكن المختلفة",
-    category: "RPG",
-    filename: __filename,
-    level: 20, // Minimum level required to use this command
+    desc: "زيارة مغامرة للبحث عن الثروات.",
+    category: "مغامرة",
   },
-  async (Void, citel) => {
-    const userId = citel.sender;
-    const currentTime = Date.now();
-
+  async (Void, citel, text) => {
     try {
-      // Fetch user from the database or create if not found
-      let user = await sck1.findOneAndUpdate(
-        { id: userId },
-        { $setOnInsert: { id: userId, inventory: [], health: 100, lastAdventure: 0 } },
-        { upsert: true, new: true }
-      );
-
-      // Check cooldown
-      if (currentTime - user.lastAdventure < COOLDOWN_DURATION) {
-        const timeRemaining = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
-        citel.reply(`يجب عليك الانتظار لمدة ${formatTime(timeRemaining)} قبل القيام بمغامرة جديدة.`);
-        return;
+      let user = await sck1.findOne({ id: citel.sender });
+      if (!user) {
+        user = new sck1({ id: citel.sender });
+        await user.save();
       }
 
-      // Load rewards from items.json file
-      const rewards = loadRewards(MAX_REWARDS);
-
-      // Simulate adventure
-      const damage = getRandomInt(10, 30); // Random damage between 10 and 30
-      user.health -= damage;
-      user.lastAdventure = currentTime;
-
-      if (user.health < 0) {
-        user.health = 0;
+      // Check if the user is healthy enough for adventure
+      if (user.health < 80) {
+        return citel.reply(`يتطلب حد أدنى *❤️ 80 صحة* لـ ${text}!!\n\nاكتب *${usedPrefix}استعادة* لزيادة الصحة.\nأو *${usedPrefix}استخدم مشروب* لاستخدام المشروب.`);
       }
 
-      // Add rewards to user's inventory
-      for (const reward of rewards.inventory) {
-        user.inventory.push(reward);
+      // Check if the user is on cooldown
+      if (new Date() - user.lastAdventure <= cooldown) {
+        const remainingTime = cooldown - (new Date() - user.lastAdventure);
+        return citel.reply(`لقد مغامرت بالفعل، الرجاء الانتظار\n*🕐${(remainingTime / 60000).toFixed(0)} دقيقة*`);
       }
 
-      // Limit inventory size
-      if (user.inventory.length > 50) {
-        user.inventory = user.inventory.slice(0, 50);
-      }
+      user.adventureCount += 1;
 
-      // Update user's health and inventory in the database
-      await user.save();
+      const health = ranNumb(3, 6);
+      const money = ranNumb(1000, 3000);
+      const trash = ranNumb(10, 50);
+      const rock = ranNumb(1, 4);
+      const wood = ranNumb(1, 4);
+      const string = ranNumb(1, 3);
+      const common = ranNumb(1, 2);
+      const gold = user.adventureCount % 50 === 0 ? 1 : 0; // Give 1 gold every 50 adventures
+      const emerald = user.adventureCount % 150 === 0 ? 1 : 0; // Give 1 emerald every 150 adventures
+      const diamond = user.adventureCount % 400 === 0 ? 1 : 0; // Give 1 diamond every 400 adventures
 
-      citel.reply(`لقد مغامرت وتلقيت ضربة! صحتك الآن: ${user.health}`);
+      user.health -= health;
+      user.money += money;
+      user.trash += trash;
+      user.rock += rock;
+      user.wood += wood;
+      user.string += string;
+      user.common += common;
+      user.gold += gold;
+      user.emerald += emerald;
+      user.diamond += diamond;
 
-      // Send a separate message for rewards
-      if (rewards.inventory.length > 0) {
-        const itemsList = rewards.inventory.map(item => `${item.name} x${item.quantity}`).join("\n");
-        citel.reply(`*تم اكتساب المكافآت التالية:*\n\n${itemsList}`);
-      }
-
-      // Check if user's health reached zero
-      if (user.health === 0) {
-        citel.reply("لقد فقدت جميع صحتك! تحتاج إلى الراحة والشفاء.");
-        return;
-      }
-    } catch (error) {
-      console.error('Error in adventure command:', error);
-      citel.reply("حدث خطأ أثناء محاولة تنفيذ الأمر.");
+      let txt = `[ *انتهت ${text}* ]\n\n`;
+      txt += `*❤️ صحة : -${health}*\nلقد حصلت على :\n`;
+      txt += `*💵 مال :* ${money}\n`;
+      txt += `*🗑 قمامة :* ${trash}\n`;
+      txt += `*🪨 صخور :* ${rock}\n`;
+      txt += `*🪵 خشب :* ${wood}\n`;
+      txt += `*🕸️ خيوط :* ${string}`;
+      if (user.adventureCount % 25 === 0) txt += `\n\nمكافأة مغامرة ${user.adventureCount} مرة\n*📦 عادية :* ${common}`;
+      if (user.adventureCount % 50 === 0) txt += `\n\nمكافأة مغامرة ${user.adventureCount} مرة\n*👑 ذهب :* ${gold}`;
+      if (user.adventureCount % 150 === 0) txt += `\n\nمكافأة مغامرة ${user.adventureCount} مرة\n*💚 زمرد :* ${emerald}`;
+      if (user.adventureCount % 400 === 0) txt += `\n\nمكافأة مغامرة ${user.adventureCount} مرة\n*💎 الماس :* ${diamond}`;
+      citel.reply(txt);
+      user.lastAdventure = new Date() * 1;
+    } catch (err) {
+      console.error(err);
+      citel.reply("حدث خطأ أثناء تنفيذ الأمر.");
     }
   }
 );
-
-// Function to generate a random integer between min and max (inclusive)
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// Function to load rewards from items.json file and limit the number of rewards
-function loadRewards(maxRewards) {
-  const itemsData = fs.readFileSync('./lib/items.json');
-  const items = JSON.parse(itemsData);
-  const rarityKeys = Object.keys(items);
-  const inventory = [];
-
-  // Limit the number of rewards
-  let remainingRewards = maxRewards;
-  rarityKeys.forEach(rarity => {
-    items[rarity].forEach(item => {
-      if (remainingRewards > 0) {
-        inventory.push({
-          name: item.name,
-          quantity: getRandomInt(1, 5), // Random quantity between 1 and 5
-        });
-        remainingRewards--;
-      }
-    });
-  });
-
-  return { inventory };
-}
-
-// Function to format time in HH:MM:SS format
-function formatTime(milliseconds) {
-  const seconds = Math.floor((milliseconds / 1000) % 60);
-  const minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
-  const hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
-
-  return `${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية`;
-}
-*/

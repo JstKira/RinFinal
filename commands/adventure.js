@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { cmd } = require('../lib');
+const { cmd, prefix } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
 const fs = require('fs');
@@ -53,7 +53,7 @@ cmd(
 
       // Check if the user is healthy enough for adventure
       if (user.health < 80) {
-        return citel.reply(`يتطلب حد أدنى *❤️ 80 صحة* لـ ${text}!!\n\nاكتب *${usedPrefix}استعادة* لزيادة الصحة.\nأو *${usedPrefix}استخدم مشروب* لاستخدام المشروب.`);
+        return citel.reply(`يتطلب حد أدنى *❤️ 80 صحة* لـ ${text}!!\n\nاكتب *${prefix}استعادة* لزيادة الصحة.\nأو *${prefix}استخدم مشروب* لاستخدام المشروب.`);
       }
 
       // Check if the user is on cooldown

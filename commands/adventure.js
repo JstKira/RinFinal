@@ -1,7 +1,7 @@
 const { cmd } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
-const { fs }  = require('fs')
+const { fs }  = require('fs');
 
 const COOLDOWN_DURATION = 5 * 60 * 1000;
 const MAX_REWARDS = 7; // Maximum number of rewards

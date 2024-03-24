@@ -34,7 +34,7 @@ cmd(
       // Array of animals to be hunted
       let animals = [
         {"animal": 0}, {"animal": 0}, {"animal": 0}, {"animal": 0}, {"animal": 0}, {"animal": 0},
-        {"animal": 0}, {"animal": 0}, {"animal": 0}, {"animal": 0}, {"animal": 0}, {"animal": 0}
+        {"animal": 0}, {"animal": 0}, {"animal": 0}, {"animal": 0}
       ];
 
       // Randomly generate number of each animal
@@ -45,12 +45,11 @@ cmd(
 
       // Constructing the hunting results message
       let resultMsg = `[ *انتهى الصيد* ]\nنتائج صيد اليوم :\n\n`;
-      resultMsg += ` *🐂 = [ ${animals[0].animal} ]*             *🐃 = [ ${animals[6].animal} ]*\n`;
-      resultMsg += ` *🐅 = [ ${animals[1].animal} ]*             *🐮 = [ ${animals[7].animal} ]*\n`;
-      resultMsg += ` *🐘 = [ ${animals[2].animal} ]*             *🐒 = [ ${animals[8].animal} ]*\n`;
-      resultMsg += ` *🐐 = [ ${animals[3].animal} ]*             *🐗 = [ ${animals[9].animal} ]*\n`;
-      resultMsg += ` *🐼 = [ ${animals[4].animal} ]*             *🐖 = [ ${animals[10].animal} ]*\n`;
-      resultMsg += ` *🐊 = [ ${animals[5].animal} ]*             *🐓 = [ ${animals[11].animal} ]*`;
+      resultMsg += ` *🐂 = [ ${animals[0].animal} ]*             *🐃 = [ ${animals[5].animal} ]*\n`;
+      resultMsg += ` *🐅 = [ ${animals[1].animal} ]*             *🐮 = [ ${animals[6].animal} ]*\n`;
+      resultMsg += ` *🐘 = [ ${animals[2].animal} ]*             *🐒 = [ ${animals[7].animal} ]*\n`;
+      resultMsg += ` *🐐 = [ ${animals[3].animal} ]*             *🐊 = [ ${animals[8].animal} ]*\n`;
+      resultMsg += ` *🐼 = [ ${animals[4].animal} ]*             *🐓 = [ ${animals[9].animal} ]*\n`;
 
       // Decrease durability of armor, sword, and bow
       user.armordurability -= Math.floor(Math.random() * (120 - 80 + 1) + 80);
@@ -74,18 +73,16 @@ cmd(
       // Send the hunting results message after a delay
       setTimeout(() => {
         // Add hunted animals to user's inventory
-        user.الثور += animals[0].animal;
-        user.النمر += animals[1].animal;
-        user.الفيل += animals[2].animal;
-        user.الماعز += animals[3].animal;
-        user.الباندا += animals[4].animal;
-        user.التمساح += animals[5].animal;
-        user.الجاموس += animals[6].animal;
-        user.البقرة += animals[7].animal;
-        user.القرد += animals[8].animal;
-        user.الخنزيرالبري += animals[9].animal;
-        user.الدبالبري += animals[10].animal;
-        user.الدجاج += animals[11].animal;
+        user.ثور += animals[0].animal;
+        user.نمر += animals[1].animal;
+        user.فيل += animals[2].animal;
+        user.ماعز += animals[3].animal;
+        user.باندا += animals[4].animal;
+        user.تمساح += animals[8].animal;
+        user.جاموس += animals[5].animal;
+        user.بقرة += animals[6].animal;
+        user.قرد += animals[7].animal;
+        user.دجاجة += animals[9].animal;
 
         // Send hunting results message with the image
         conn.sendFile(citel.chat, 'https://telegra.ph/file/295a6d5105771875e1797.jpg', '', resultMsg, citel);

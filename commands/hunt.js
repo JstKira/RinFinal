@@ -44,15 +44,15 @@ cmd(
         await user.save();
       }
 
-      // Check if the user has required items for hunting
-      if (user.armor === 0 || user.sword === 0 || user.bow === 0) {
-        return citel.reply(`يجب صنع الدروع، السيوف، والأقواس أولاً.\n\nلديك:\n━ 🥼 ${user.armor} درع\n━ ⚔️ ${user.sword} سيف\n━ 🏹 ${user.bow} قوس`);
-      }
-
       // Check if the user is on cooldown for hunting
       if (new Date() - user.lasthunt <= cooldown) {
         const remainingTime = cooldown - (new Date() - user.lasthunt);
         return citel.reply(`لقد قمت بالصيد مؤخرا، الرجاء الانتظار\n*🕐${(remainingTime / 86400000).toFixed(0)} يوم*`);
+      }
+
+      // Check if the user has required items for hunting
+      if (user.armor === 0 || user.sword === 0 || user.bow === 0) {
+        return citel.reply(`يجب صنع الدروع، السيوف، والأقواس أولاً.\n\nلديك:\n━ 🥼 ${user.armor} درع\n━ ⚔️ ${user.sword} سيف\n━ 🏹 ${user.bow} قوس`);
       }
 
       // Array of animals to be hunted
@@ -93,8 +93,9 @@ cmd(
         user.bowdurability = 0;
         user.bow = 0;
       }
- // Send the hunting results message after a delay
-      setTimeout(() => {
+
+      // Send the hunting results message after a delay
+      setTimeout(async () => {
         // Add hunted animals to user's inventory
         user.ثور += animals[0].animal;
         user.نمر += animals[1].animal;
@@ -106,6 +107,8 @@ cmd(
         user.بقرة += animals[6].animal;
         user.قرد += animals[7].animal;
         user.دجاجة += animals[9].animal;
+
+        // Save the updated user data to MongoDB
         await user.save();
 
         // Send hunting results message with the image
@@ -131,7 +134,8 @@ cmd(
         // Update the last hunt time
         user.lasthunt = new Date() * 1;
       });
-    } catch (error) {
+    } 
+    catch (error) {
       console.error("حدث خطأ أثناء تنفيذ الأمر:", error);
       citel.reply("حدث خطأ أثناء تنفيذ الأمر.");
     }

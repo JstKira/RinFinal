@@ -1,10 +1,10 @@
 const { cmd } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
-const fs = require('fs');
-
+const { fs }  = require('fs')
 
 const COOLDOWN_DURATION = 5 * 60 * 1000;
+const MAX_REWARDS = 7; // Maximum number of rewards
 
 cmd(
   {
@@ -15,8 +15,8 @@ cmd(
     level: 20, // Minimum level required to use this command
   },
   async (Void, citel) => {
-    const currentTime = Date.now();
     const userId = citel.sender;
+    const currentTime = Date.now();
 
     // Function to format time in HH:MM:SS format
     function formatTime(milliseconds) {
@@ -37,28 +37,21 @@ cmd(
         user = await sck1.create({ id: userId });
       }
 
+      // Check if user has cooldown remaining
+      const cooldownRemaining = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
+      if (cooldownRemaining > 0) {
+        citel.reply(`يجب عليك الانتظار لمدة ${formatTime(cooldownRemaining)} قبل القيام بمغامرة جديدة.`);
+        return;
+      }
+
       // Check user's level
       if (user.level < 20) {
         citel.reply("يجب أن تكون على مستوى 20 أو أعلى لاستخدام هذا الأمر.");
         return;
       }
 
-      // Check user's health
-      if (user.health < 20) {
-        const timeUntilReset = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
-        citel.reply(`صحتك أقل من 20، يرجى استخدام الجرعات العلاجية أو الانتظار حتى تعود الصحة إلى الحالة الكاملة. الوقت المتبقي: ${formatTime(timeUntilReset)}.`);
-        return;
-      }
-
-      // Check cooldown
-      if (currentTime - user.lastAdventure < COOLDOWN_DURATION) {
-        const timeRemaining = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
-        citel.reply(`يجب عليك الانتظار لمدة ${formatTime(timeRemaining)} قبل القيام بمغامرة جديدة.`);
-        return;
-      }
-
       // Load rewards from items.json file
-      const rewards = loadRewards();
+      const rewards = loadRewards().slice(0, MAX_REWARDS); // Limit rewards
 
       // Simulate adventure
       const damage = getRandomInt(10, 30); // Random damage between 10 and 30
@@ -75,8 +68,8 @@ cmd(
       citel.reply(`لقد مغامرت وتلقيت ضربة! صحتك الآن: ${user.health}`);
 
       // Send a separate message for rewards
-      if (rewards.inventory.length > 0) {
-        const itemsList = rewards.inventory.map(item => `${item.name} x${item.quantity}`).join("\n");
+      if (rewards.length > 0) {
+        const itemsList = rewards.map(item => `${item.name} x${item.quantity}`).join("\n");
         citel.reply(`*تم اكتساب المكافآت التالية:*\n\n${itemsList}`);
       }
 
@@ -113,5 +106,5 @@ function loadRewards() {
     });
   });
 
-  return { inventory };
+  return inventory;
 }

@@ -7,7 +7,7 @@ const fs = require('fs');
 // Define the cooldown time for the adventure
 const cooldown = 900000; // 15 minutes
 // Define a function to generate a random number between min and max (inclusive)
-function ranNum(min, max) {
+function ranNumb(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 

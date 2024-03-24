@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { cmd, prefix } = require('../lib');
 const  RandomXP = require('../lib/database/xp');
-const Sck1  = require('../lib/database/user');
+const { sck1 }  = require('../lib/database/user');
 const axios = require('axios')
 const fetch = require('node-fetch')
 

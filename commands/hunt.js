@@ -1,6 +1,29 @@
-const { cmd } = require('../lib')
+const { cmd } = require('../lib');
 import { sck1 } from '../lib/database/user';
 import { RandomXP } from '../lib/database/xp';
+const mongoose = require('mongoose');
+
+const mongoURI = process.env.MONGODB_URI;
+
+// Connect to MongoDB
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Event handlers for MongoDB connection
+mongoose.connection.on('connected', () => {
+  console.log('Connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Disconnected from MongoDB');
+});
+
 
 // Define the cooldown time for hunting and the time before sending the results
 const cooldown = 259200000; // 3 days

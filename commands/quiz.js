@@ -66,5 +66,5 @@ cmd(
     
     // End the game after the user's response
     delete currentGame[citel.sender];
-  }
+  }}
 );

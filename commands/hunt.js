@@ -28,7 +28,7 @@ mongoose.connection.on('disconnected', () => {
 
 
 // Define the cooldown time for hunting and the time before sending the results
-const cooldown = 43200000; // 3 days
+const cooldown = 86400000; // 1 day
 const cooldownn = 10000; // 10s
 
 cmd(
@@ -109,19 +109,20 @@ cmd(
         user.قرد += animals[7].animal;
         user.دجاجة += animals[9].animal;
 
-        // Send hunting results message with the image
-        setTimeout(() => {
+       
+ // Send hunting results message with the image
+setTimeout(() => {
   const buttonMessage = {
     image: {
       url: 'https://telegra.ph/file/295a6d5105771875e1797.jpg',
     },
-    caption:' *${characterName}*',
-            headerType: 4,
-          };
+    caption: `*${resultMsg}*`,
+    headerType: 4,
+  };
 
-          Void.sendMessage(citel.chat, buttonMessage, {
-            quoted: citel,
-            });
+  Void.sendMessage(citel.chat, buttonMessage, {
+    quoted: citel,
+  });
 }, cooldownn);
          
 

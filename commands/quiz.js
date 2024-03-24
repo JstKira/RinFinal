@@ -42,6 +42,7 @@ cmd(
 
 
 // Listen for text messages to answer the quiz question
+// Listen for text messages to answer the quiz question
 cmd(
   {
     on: "text"
@@ -49,22 +50,33 @@ cmd(
   async (Void, citel, text) => {
     // Check if the user is in an active game
     if (!currentGame[citel.sender]) return;
-     if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
-      return;
+    if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+        return;
     } else {
-    const guess = citel.text; // Convert input to lowercase for case-insensitive comparison
-    const currentQuestion = quizQuestions[0]; // Only one question for each game
-    
-     // Check if the user's guess matches the correct answer
-    if (guess === currentQuestion.answer) {
-      // Reward the player with some virtual currency (adjust as needed)
-      await eco.give(citel.sender, "secktor", 200);
-      citel.reply(`🎉 *لقد أجبت بشكل صحيح وفزت بمكافأة قيمتها 500 💰`);
-    } else {
-      citel.reply(`❌ *خطأ!* الإجابة الصحيحة هي: ${currentQuestion.answer}`);
+        const guess = citel.text.trim(); // Trim input to remove leading/trailing spaces
+        const currentQuestion = quizQuestions[0]; // Only one question for each game
+
+        // Check if the user's guess matches any of the correct answers
+        const correctAnswers = currentQuestion.correctAnswers;
+        let isCorrect = false;
+
+        for (const answer of correctAnswers) {
+            if (guess === answer) {
+                isCorrect = true;
+                break;
+            }
+        }
+
+        if (isCorrect) {
+            // Reward the player with some virtual currency (adjust as needed)
+            await eco.give(citel.sender, "secktor", 200);
+            citel.reply(`🎉 *لقد أجبت بشكل صحيح وفزت بمكافأة قيمتها 200 💰`);
+        } else {
+            citel.reply(`❌ *خطأ!* الإجابة الصحيحة هي: ${correctAnswers.join(" أو ")}`);
+        }
+
+        // End the game after the user's response
+        delete currentGame[citel.sender];
     }
-    
-    // End the game after the user's response
-    delete currentGame[citel.sender];
-  }}
+  }
 );

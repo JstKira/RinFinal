@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
 const { cmd } = require('../lib');
 const fs = require('fs');
-const eco = require('discord-mongoose-economy');
-// Connect to MongoDB using eco
-const ty = eco.connect(mongodb);
+const MONGODB_URI = process.env.MONGODB_URI; // Make sure you have set up the MONGODB_URI environment variable
+
+// Connect to MongoDB
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log("Connected to MongoDB");
+})
+.catch(err => {
+  console.error("Error connecting to MongoDB:", err);
+});
 
 // Define cooldown duration (5 minutes)
 const COOLDOWN_DURATION = 5 * 60 * 1000;

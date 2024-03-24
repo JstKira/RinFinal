@@ -90,14 +90,18 @@ function getRandomInt(min, max) {
 function loadRewards() {
   const itemsData = fs.readFileSync('./lib/items.json');
   const items = JSON.parse(itemsData);
-  const rarityKeys = Object.keys(items);
   const inventory = [];
 
-  rarityKeys.forEach(rarity => {
-    items[rarity].forEach(item => {
+  Object.values(items).forEach(itemGroup => {
+    itemGroup.forEach(item => {
       inventory.push({
         name: item.name,
-        quantity: getRandomInt(1, 5), // Random quantity between 1 and 5
+        type: item.type,
+        description: item.description,
+        rarity: item.rarity,
+        effect: item.effect,
+        emoji: item.emoji,
+        // Add any other properties you need from the items.json file
       });
     });
   });

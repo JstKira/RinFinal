@@ -1,4 +1,4 @@
-import { cmd } from '../lib';
+const { cmd } = require('../lib')
 import { sck1 } from '../lib/database/user';
 import { RandomXP } from '../lib/database/xp';
 

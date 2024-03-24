@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { cmd } = require('../lib');
 const fs = require('fs');
-
+const eco = require('discord-mongoose-economy');
 // Connect to MongoDB using eco
 const ty = eco.connect(mongodb);
 

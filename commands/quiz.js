@@ -56,9 +56,9 @@ cmd(
     const currentQuestion = quizQuestions[0]; // Only one question for each game
     
      // Check if the user's guess matches the correct answer
-    if (guess === currentQuestion.answer.toLowerCase()) {
+    if (guess === currentQuestion.answer) {
       // Reward the player with some virtual currency (adjust as needed)
-      await eco.give(citel.sender, "secktor", 500);
+      await eco.give(citel.sender, "secktor", 200);
       citel.reply(`🎉 *لقد أجبت بشكل صحيح وفزت بمكافأة قيمتها 500 💰`);
     } else {
       citel.reply(`❌ *خطأ!* الإجابة الصحيحة هي: ${currentQuestion.answer}`);

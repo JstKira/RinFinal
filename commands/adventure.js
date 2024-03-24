@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { cmd } = require('../lib');
 const fs = require('fs');
+const { RandomXP } = require('../lib/database/xp');
+const { sck1 } = require('../lib/database/user');
 const MONGODB_URI = process.env.MONGODB_URI; // Make sure you have set up the MONGODB_URI environment variable
 
 // Connect to MongoDB

@@ -132,7 +132,7 @@ cmd(
         }, 0);
 
         // Update the last hunt time
-        user.lasthunt = new Date() * 1;
+       user.lasthunt = new Date().getTime();
       });
     } 
     catch (error) {

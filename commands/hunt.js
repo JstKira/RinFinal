@@ -127,12 +127,13 @@ setTimeout(() => {
          
 
       // Send a message indicating the start of hunting
-      setTimeout(() => {
-        citel.reply('_الصيد بدأ..._');
-      }, 0);
+      // Send a message indicating the start of hunting
+setTimeout(() => {
+  citel.reply('_الصيد بدأ..._');
+}, 0);
 
-      // Update the last hunt time
-      user.lasthunt = new Date() * 1;
+// Update the last hunt time
+user.lasthunt = new Date() * 1;
     } catch (err) {
       console.error(err);
       citel.reply("حدث خطأ أثناء تنفيذ الأمر.");

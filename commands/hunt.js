@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const { cmd, prefix } = require('../lib');
 const { RandomXP } = require('../lib/database/xp');
 const { sck1 } = require('../lib/database/user');
-
+const axios = require('axios')
+const fetch = require('node-fetch')
 const mongoURI = process.env.MONGODB_URI;
 
 // Connect to MongoDB

@@ -22,7 +22,6 @@ cmd(
     desc: "عرض المخزون",
     category: "RPG",
     filename: __filename,
-    level: 15, // Minimum level required to use this command
   },
   async (Void, citel) => {
     const userId = citel.sender;

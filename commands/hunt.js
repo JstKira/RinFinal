@@ -44,15 +44,15 @@ cmd(
         await user.save();
       }
 
+      // Check if the user has required items for hunting
+      if (user.armor === 0 || user.sword === 0 || user.bow === 0) {
+        return citel.reply(`يجب صنع الدروع، السيوف، والأقواس أولاً.\n\nلديك:\n━ 🥼 ${user.armor} درع\n━ ⚔️ ${user.sword} سيف\n━ 🏹 ${user.bow} قوس`);
+      }
+
       // Check if the user is on cooldown for hunting
       if (new Date() - user.lasthunt <= cooldown) {
         const remainingTime = cooldown - (new Date() - user.lasthunt);
         return citel.reply(`لقد قمت بالصيد مؤخرا، الرجاء الانتظار\n*🕐${(remainingTime / 86400000).toFixed(0)} يوم*`);
-      }
-
-      // Check if the user has required items for hunting
-      if (user.armor === 0 || user.sword === 0 || user.bow === 0) {
-        return citel.reply(`يجب صنع الدروع، السيوف، والأقواس أولاً.\n\nلديك:\n━ 🥼 ${user.armor} درع\n━ ⚔️ ${user.sword} سيف\n━ 🏹 ${user.bow} قوس`);
       }
 
       // Array of animals to be hunted

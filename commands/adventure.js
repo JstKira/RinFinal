@@ -14,8 +14,7 @@ cmd(
     filename: __filename,
     level: 20, // Minimum level required to use this command
   },
-  async (Void, citel, user) => {
-    const userId = citel.sender;
+  async (Void, citel, userId) => { // Assuming userId is passed as an argument
     const currentTime = Date.now();
 
     // Function to format time in HH:MM:SS format
@@ -27,56 +26,74 @@ cmd(
       return `${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية`;
     }
 
-    // Check user's level
-    if (user.level < 20) {
-      citel.reply("يجب أن تكون على مستوى 20 أو أعلى لاستخدام هذا الأمر.");
-      return;
-    }
+    try {
+      // Fetch user from the database
+      let user = await sck1.findOne({ id: userId });
 
-    // Check user's health
-    if (user.health < 20) {
-      const timeUntilReset = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
-      citel.reply(`صحتك أقل من 20، يرجى استخدام الجرعات العلاجية أو الانتظار حتى تعود الصحة إلى الحالة الكاملة. الوقت المتبقي: ${formatTime(timeUntilReset)}.`);
-      return;
-    }
+      // Check if user exists
+      if (!user) {
+        citel.reply("مالقيت لك بيانات بالداتا بيس، اول مرة تستخدم البوت؟");
+        return;
+      }
 
-    // Check cooldown
-    if (currentTime - user.lastAdventure < COOLDOWN_DURATION) {
-      const timeRemaining = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
-      citel.reply(`يجب عليك الانتظار لمدة ${formatTime(timeRemaining)} قبل القيام بمغامرة جديدة.`);
-      return;
-    }
+      // Check user's level
+      if (user.level < 20) {
+        citel.reply("*يجب أن تكون على مستوى 20 أو أعلى لاستخدام هذا الأمر.*");
+        return;
+      }
 
-    // Load rewards from items.json file
-    const rewards = loadRewards();
+      // Check user's health
+      if (user.health < 20) {
+        const timeUntilReset = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
+        citel.reply(`صحتك أقل من 20، يرجى استخدام الجرعات العلاجية أو الانتظار حتى تعود الصحة إلى الحالة الكاملة. الوقت المتبقي: ${formatTime(timeUntilReset)}.`);
+        return;
+      }
 
-    // Simulate adventure
-    const damage = getRandomInt(10, 30); // Random damage between 10 and 30
-    user.health -= damage;
-    user.lastAdventure = currentTime;
-    
-    if (user.health < 0) {
-      user.health = 0;
-    }
+      // Check cooldown
+      if (currentTime - user.lastAdventure < COOLDOWN_DURATION) {
+        const timeRemaining = COOLDOWN_DURATION - (currentTime - user.lastAdventure);
+        citel.reply(`يجب عليك الانتظار لمدة ${formatTime(timeRemaining)} قبل القيام بمغامرة جديدة.`);
+        return;
+      }
 
-    // Update user's health and inventory in the database
-    await Promise.all([
-      user.save(),
-      sck1.updateOne({ id: userId }, { $addToSet: { inventory: { $each: rewards.inventory } } })
-    ]);
+      // Load rewards from items.json file
+      const rewards = loadRewards();
 
-    citel.reply(`لقد مغامرت وتلقيت ضربة! صحتك الآن: ${user.health}`);
-    
-    // Send a separate message for rewards
-    if (rewards.inventory.length > 0) {
-      const itemsList = rewards.inventory.map(item => `${item.name} x${item.quantity}`).join("\n");
-      citel.reply(`*تم اكتساب المكافآت التالية:*\n\n${itemsList}`);
-    }
+      // Simulate adventure
+      const damage = getRandomInt(10, 30); // Random damage between 10 and 30
+      user.health -= damage;
+      user.lastAdventure = currentTime;
 
-    // Check if user's health reached zero
-    if (user.health === 0) {
-      citel.reply("لقد فقدت جميع صحتك! تحتاج إلى الراحة والشفاء.");
-      return;
+      if (user.health < 0) {
+        user.health = 0;
+      }
+
+      // Update user's health and inventory in the database
+      const result = await user.updateOne({ $addToSet: { inventory: { $each: rewards.inventory } } });
+
+      // Check if update was successful
+      if (result.nModified > 0) {
+        console.log('Inventory updated successfully');
+      } else {
+        console.log('No changes made to inventory');
+      }
+
+      citel.reply(`غامرت وتلقيت ضربة! صحتك الآن: ${user.health}`);
+
+      // Send a separate message for rewards
+      if (rewards.inventory.length > 0) {
+        const itemsList = rewards.inventory.map(item => `${item.name} x${item.quantity}`).join("\n");
+        citel.reply(`*تم اكتساب المكافآت التالية:*\n\n${itemsList}`);
+      }
+
+      // Check if user's health reached zero
+      if (user.health === 0) {
+        citel.reply("نقاط صحتك صفّرت! تحتاج إلى الراحة والشفاء.");
+        return;
+      }
+    } catch (error) {
+      console.error('Error in adventure command:', error);
+      citel.reply("حدث خطأ أثناء محاولة تنفيذ الأمر.");
     }
   }
 );
@@ -90,18 +107,14 @@ function getRandomInt(min, max) {
 function loadRewards() {
   const itemsData = fs.readFileSync('./lib/items.json');
   const items = JSON.parse(itemsData);
+  const rarityKeys = Object.keys(items);
   const inventory = [];
 
-  Object.values(items).forEach(itemGroup => {
-    itemGroup.forEach(item => {
+  rarityKeys.forEach(rarity => {
+    items[rarity].forEach(item => {
       inventory.push({
         name: item.name,
-        type: item.type,
-        description: item.description,
-        rarity: item.rarity,
-        effect: item.effect,
-        emoji: item.emoji,
-        // Add any other properties you need from the items.json file
+        quantity: getRandomInt(1, 5), // Random quantity between 1 and 5
       });
     });
   });

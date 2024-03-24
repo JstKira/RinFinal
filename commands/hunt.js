@@ -106,6 +106,7 @@ cmd(
         user.بقرة += animals[6].animal;
         user.قرد += animals[7].animal;
         user.دجاجة += animals[9].animal;
+        await user.save();
 
         // Send hunting results message with the image
         setTimeout(() => {

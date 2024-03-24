@@ -109,8 +109,20 @@ cmd(
         user.دجاجة += animals[9].animal;
 
         // Send hunting results message with the image
-        conn.sendFile(citel.chat, 'https://telegra.ph/file/295a6d5105771875e1797.jpg', '', resultMsg, citel);
-      }, cooldownn);
+        setTimeout(() => {
+  const buttonMessage = {
+    image: {
+      url: 'https://telegra.ph/file/295a6d5105771875e1797.jpg',
+    },
+    caption:' *${characterName}*',
+            headerType: 4,
+          };
+
+          Void.sendMessage(citel.chat, buttonMessage, {
+            quoted: citel,
+            });
+}, cooldownn);
+         
 
       // Send a message indicating the start of hunting
       setTimeout(() => {

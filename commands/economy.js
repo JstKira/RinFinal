@@ -252,36 +252,7 @@ return await citel.reply(`*💳 محفظة ${citel.pushName}:*\n\n_🪙${balance
     }
 )
 //---------------------------------------------------------------------------
-cmd({
-  pattern: "مغامرة",
-  desc: "ابدأ مغامرة جديدة.",
-  category: "ترفيه",
-  filename: __filename,
-  react: "🗺️"
-},
-async (Void, citel, text) => {
-  let zerogroup = (await sck.findOne({
-    id: citel.chat,
-  })) || (await new sck({
-    id: citel.chat,
-  }).save());
-  let mongoschemas = zerogroup.economy || "false";
-  if (mongoschemas == "false") return citel.reply("الألعاب الاقتصادية غير مفعلة في هذه المجموعة.");
-  if (!citel.isGroup) return citel.reply("خاص بالقروبات");
-  const sector = "Rin";
-  const adventure = await eco.startAdventure(citel.sender, sector, 2000);
-  if (adventure.error) {
-    return citel.reply(`فيه خطأ: ${adventure.error}`);
-  } else {
-    const coinsReward = 1000; // المبلغ من العملات الذي سيحصل عليه اللاعب عند إكمال المغامرة
-    const completed = await eco.completeAdventure(citel.sender, sector, adventure.adventureID, coinsReward);
-    if (completed.error) {
-      return citel.reply(`فيه خطأ: ${completed.error}`);
-    } else {
-      return citel.reply(`مبروك! لقد أكملت المغامرة وحصلت على ${coinsReward} عملة!`);
-    }
-  }
-});
+
      //---------------------------------------------------------------------------
      cmd({
         pattern: "منح",

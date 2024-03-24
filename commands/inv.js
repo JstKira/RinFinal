@@ -1,5 +1,19 @@
 const { cmd } = require('../lib');
-const { RandomXP } = require('../lib/database/xp');
+const mongoose = require('mongoose');
+
+// Connect to MongoDB database using environment variable
+const mongoURI = process.env.MONGODB_URI;
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB database');
+});
+
+// Import the user schema
 const { sck1 } = require('../lib/database/user');
 
 cmd(
@@ -13,14 +27,6 @@ cmd(
   async (Void, citel) => {
     const userId = citel.sender;
     try {
-        // Check user's level
-        const userLevelDoc = await RandomXP.findOne({ id: userId });
-        const userLevel = userLevelDoc ? userLevelDoc.level : 0;
-        if (userLevel < 5) {
-            citel.reply("لازم توصل مستوى 15 او اعلى عشان تستخدم الامر");
-            return;
-        }
-        
         // Fetch user's inventory
         const user = await sck1.findOne({ id: userId });
         const inventory = user ? user.inventory : [];

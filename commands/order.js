@@ -50,12 +50,14 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
     const game = games[citel.sender];
-    if (citel.quoted.text !== questionMessage) {
+    const quotedMessageId = citel.quoted && citel.quoted.id; // Get the ID of the quoted message, if any
+    if (quotedMessageId !== game.questionMessageId) {
       return; // Ignore if the user's reply is not to the correct question message
     }
+    
     const guess = citel.text;
 
-    if (guess === game.word) {
+    if (guess === game.word.toLowerCase()) {
       await eco.give(citel.sender, "secktor", 500); // Reward the player
       citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
       delete games[citel.sender]; // Delete the game

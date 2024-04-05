@@ -51,10 +51,14 @@ cmd(
     on: "text"
   },
   async (Void, citel, text) => {
-    if (!citel.isGroup) return;
-    if (!games[citel.sender]) return; // No active game for the user
-    if (!/^([a-z]|[أ-ي])$/i.test(citel.text)) return;
-
+  if (!citel.isGroup) return;
+  if (!games[citel.sender]) return; // No active game for the user
+  if (!/^([a-z]|[أ-ي])$/i.test(citel.text)) return;
+  
+  // Check if the message is a reply and the original message's sender is not the specified number
+  if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+    return; // If there's no quoted message or if the sender doesn't match, do nothing
+  }
     const guess = citel.text.toLowerCase();
     const game = games[citel.sender];
 

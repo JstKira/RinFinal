@@ -30,9 +30,21 @@ cmd(
     const hangmanString = hangmanState.join(" ");
     const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(games[citel.sender].incorrectGuesses)}${"⬛".repeat(10 - games[citel.sender].incorrectGuesses)}`;
     
-    return citel.reply(hangmanStatus);
+    const questionMessage = await citel.reply(hangmanStatus);
+
+    games[citel.sender].questionMessageId = questionMessage.id; // Store the ID of the question message
+
+    // Set a timer for 5 minutes (300,000 milliseconds)
+    setTimeout(() => {
+      if (games[citel.sender]) {
+        delete games[citel.sender]; // Delete the game
+        questionMessage.delete(); // Delete the question message
+        citel.reply("*انتهى الوقت*");
+      }
+    }, 300000); // 5 minutes in milliseconds
   }
 );
+
 
 cmd(
   {
@@ -59,7 +71,8 @@ cmd(
     }
 
     const hangmanString = game.state.join(" ");
-    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(game.incorrectGuesses)}${"⬛".repeat(10 - game.incorrectGuesses)}`;
+    const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(games[citel.sender].incorrectGuesses)}${"⬛".repeat(10 - games[citel.sender].incorrectGuesses)}\n *اللعبة بتنحذف تلقائي اذا ماقدرت تخلصها خلال 5 دقايق*`;
+
 
     await Void.sendMessage(citel.chat, {
       text: hangmanStatus,
@@ -84,4 +97,4 @@ cmd(
       return;
     }
   }
-);
+);    

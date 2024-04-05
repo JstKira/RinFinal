@@ -17,13 +17,26 @@ cmd(
     if (!games[citel.sender]) {
       const word = wordList[Math.floor(Math.random() * wordList.length)];
       const scrambledWord = scrambleWord(word);
-      games[citel.sender] = {
-        word: word,
-        scrambledWord: scrambledWord
-      };
       const formattedWord = word.split('').join(' ');
       const formattedScrambledWord = scrambledWord.split('').join(' ');
-      citel.reply(`🧩 *رتب الحروف* 🧩\n\n*الحروف :*\n\n\`${formattedScrambledWord}\``);
+      
+      const questionMessage = await citel.reply(`🧩 *رتب الحروف* 🧩\n\n*الحروف :*\n\n\`${formattedScrambledWord}\`\n\n*سيتم حذف اللعبة خلال 60 ثانيةاذا ماجاوبت*`);
+      
+      games[citel.sender] = {
+        word: word,
+        scrambledWord: scrambledWord,
+        questionMessageId: questionMessage.id // Store the ID of the question message
+      };
+      
+      // Set a timer for 60 seconds
+      setTimeout(() => {
+        // Check if the game is still active
+        if (games[citel.sender]) {
+          delete games[citel.sender]; // Delete the game
+          questionMessage.delete(); // Delete the question message
+          citel.reply("لقد انتهت مدة اللعبة، حاول مرة أخرى في وقت لاحق.");
+        }
+      }, 60000);
     } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
     }
@@ -36,20 +49,19 @@ cmd(
   },
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
-if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
-    return;
-} else {
-    const guess = citel.text;
     const game = games[citel.sender];
+    if (citel.quoted.sender !== '966508206360@s.whatsapp.net' || citel.quoted.id !== game.questionMessageId) {
+      return; // Ignore if the user's reply is not to the correct question message
+    }
+    const guess = citel.text;
 
     if (guess === game.word.toLowerCase()) {
-        await eco.give(citel.sender, "secktor", 500); // Reward the player
-        citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
-        delete games[citel.sender]; // Delete the game
+      await eco.give(citel.sender, "secktor", 500); // Reward the player
+      citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
+      delete games[citel.sender]; // Delete the game
     } else {
-        citel.reply(`❌ *خطأ*`);
+      citel.reply(`❌ *خطأ*`);
     }
-}
   }
 );
 

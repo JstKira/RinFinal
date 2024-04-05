@@ -74,27 +74,21 @@ cmd(
     const hangmanStatus = `حالة المشنقة: ${hangmanString}\n${"❌".repeat(games[citel.sender].incorrectGuesses)}${"⬛".repeat(10 - games[citel.sender].incorrectGuesses)}\n *اللعبة بتنحذف تلقائي اذا ماقدرت تخلصها خلال 5 دقايق*`;
 
 
-    await Void.sendMessage(citel.chat, {
-      text: hangmanStatus,
-    });
+    await citel.reply(hangmanStatus);
 
     // Check if the word has been guessed completely
     if (!game.state.includes("_")) {
       await eco.give(citel.sender, "secktor", 2000); // Reward the player
-      await Void.sendMessage(citel.chat, {
-        text: `تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`,
-      });
+      await citel.reply(`تهانينا! لقد حزرت الكلمة بشكل صحيح وفزت بمكافأة قيمتها 2000💎.`);
       delete games[citel.sender]; // Delete the game
       return;
     }
 
     // Check if the maximum number of incorrect guesses has been reached
     if (game.incorrectGuesses >= 10) {
-      await Void.sendMessage(citel.chat, {
-        text: `لقد انتهت محاولات اللعب، الكلمة الصحيحة كانت: ${game.word}`,
-      });
+      await citel.reply(`لقد انتهت محاولات اللعب، الكلمة الصحيحة كانت: ${game.word}`);
       delete games[citel.sender]; // Delete the game
       return;
     }
   }
-);    
+); 

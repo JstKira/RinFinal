@@ -22,13 +22,12 @@ cmd(
       const characterName = characterSound.character;
 
       // Fetch the thumbnail buffer (replace 'nicepic' with the URL of the thumbnail image)
-      const thumbnailBuffer = await getBuffer('nicepic');
+      const thumbnailBuffer = await getBuffer(nicepic);
 
       let mediaData = {
         audio: { url: soundUrl },
         mimetype: 'audio/mpeg',
         ptt: true,
-        waveform: [99, 75, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 25, 50, 75, 99, 75, 50, 25, 0],
         headerType: 1,
         contextInfo: {
           forwardingScore: 999,
@@ -40,26 +39,25 @@ cmd(
             thumbnail: thumbnailBuffer,
             mediaUrl: '',
             mediaType: 1,
-            sourceUrl: 'niceurl', // Replace with your URL
             showAdAttribution: true
           }
         }
       };
 
-       const questionMessage = await citel.reply(`🔊 *صوت الشخصية* 🔊\n\n\n*استمع إلى الصوت وحاول تخمين الشخصية!*\n *60 ثانية وينتهي السؤال*`, {
+      await Void.sendMessage(citel.chat, {
+        text: `🔊 *صوت الشخصية* 🔊\n\n\n*استمع إلى الصوت وحاول تخمين الشخصية!*\n *60 ثانية وينتهي السؤال*`,
         mediaData: mediaData
       });
+
       games[citel.sender] = {
         characterName: characterName,
-        soundUrl: soundUrl,
-        questionMessageId: questionMessage.id // Store the ID of the question message
+        soundUrl: soundUrl
       };
 
       // Set a timer for 60 seconds
       setTimeout(() => {
         if (games[citel.sender]) {
           delete games[citel.sender]; // Delete the game
-          questionMessage.delete(); // Delete the question message
           citel.reply("*انتهى الوقت*");
         }
       }, 60000); // 60 seconds in milliseconds
@@ -78,9 +76,9 @@ cmd(
     const game = games[citel.sender];
 
     // Check if the message is a reply and the original message's sender is not the bot itself
-     if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
-    return; // If there's no quoted message or if the sender doesn't match, do nothing
-  }
+    if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+      return; // If there's no quoted message or if the sender doesn't match, do nothing
+    }
 
     const guess = citel.text;
     const correctAnswer = game.characterName;

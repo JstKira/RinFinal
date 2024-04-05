@@ -47,22 +47,21 @@ cmd(
     on: "text"
   },
   async (Void, citel, text) => {
-    let id = citel.chat;
-    if (!citel.quoted || !citel.quoted.fromMe || !citel.quoted.isBaileys || !/^ⷮ/i.test(citel.quoted.text)) return;
-    
-    const game = games[citel.sender];
-    if (!game) return citel.reply('*انتهى السؤال، ارسل .رتب عشان تبدأ لعبة ثانية!*');
-    
+    if (!games[citel.sender]) return; // No active game for the user
+if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+    return;
+} else {
     const guess = citel.text;
-    const correctAnswer = game.word;
+    const game = games[citel.sender];
 
-    if (guess === correctAnswer) {
-      await eco.give(citel.sender, "secktor", 500); // Reward the player
-      citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
-      delete games[citel.sender]; // Delete the game
+    if (guess === game.word.toLowerCase()) {
+        await eco.give(citel.sender, "secktor", 500); // Reward the player
+        citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
+        delete games[citel.sender]; // Delete the game
     } else {
-      citel.reply(`❌ *خطأ*`);
+        citel.reply(`❌ *خطأ*`);
     }
+}
   }
 );
 

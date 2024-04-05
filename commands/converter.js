@@ -136,7 +136,7 @@ cmd({
 
 //---------------------------------------------------------------------------
 
-cmd({
+/*cmd({
     pattern: "صوت",
     alias:['mp3','tomp3'],
     desc: "changes type to audio.",
@@ -165,3 +165,4 @@ else return console.log('File deleted successfully in TOAUDIO MP3 at : ' , media
 else return citel.reply ("```رد على فيديو```")
 }
 )
+*/

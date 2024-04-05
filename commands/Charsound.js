@@ -3,7 +3,7 @@ const fs = require('fs');
 
 // Read the character sounds from the JSON file
 const characterSounds = JSON.parse(fs.readFileSync('./lib/charsound.json'));
-const nicetitle = 'توقع الشخصية';
+const nicetitle = '🔊 *من هي الشخصية؟* 🔊\n\n\n*استمع إلى الصوت وحاول تخمين الشخصية!*\n *60 ثانية وينتهي السؤال*';
 const nicebody = "|| ◁ㅤ❚❚ㅤ▷||ㅤ ↻";
 const nicepic = 'https://static.wikia.nocookie.net/topstrongest/images/9/92/0035-022.jpg';
 

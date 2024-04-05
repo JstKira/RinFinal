@@ -51,7 +51,7 @@ cmd(
     if (!games[citel.sender]) return; // No active game for the user
     const game = games[citel.sender];
     const quotedMessageId = citel.quoted && citel.quoted.id; // Get the ID of the quoted message, if any
-    if (quotedMessageId !== game.questionMessageId) {
+    if (!quotedMessageId || quotedMessageId !== game.questionMessageId) {
       return; // Ignore if the user's reply is not to the correct question message
     }
     

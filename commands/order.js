@@ -48,19 +48,19 @@ cmd(
     on: "text"
   },
   async (Void, citel, text) => {
-    if (!games[citel.sender]) return; // No active game for the user
-    const game = games[citel.sender];
-    const quotedMessageId = citel.quoted && citel.quoted.id; // Get the ID of the quoted message, if any
-    if (!quotedMessageId || quotedMessageId !== game.questionMessageId) {
-      return; // Ignore if the user's reply is not to the correct question message
-    }
+    let id = citel.chat;
+    if (!citel.quoted || !citel.quoted.fromMe || !citel.quoted.isBaileys || !/^ⷮ/i.test(citel.quoted.text)) return;
     
-    const guess = citel.text;
+    const game = games[id];
+    if (!game) return citel.reply('*انتهى السؤال، ارسل .رتب عشان تبدأ لعبة ثانية!*');
+    
+    const guess = citel.text.toLowerCase();
+    const correctAnswer = game.word.toLowerCase();
 
-    if (guess === game.word.toLowerCase()) {
+    if (guess === correctAnswer) {
       await eco.give(citel.sender, "secktor", 500); // Reward the player
       citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
-      delete games[citel.sender]; // Delete the game
+      delete games[id]; // Delete the game
     } else {
       citel.reply(`❌ *خطأ*`);
     }

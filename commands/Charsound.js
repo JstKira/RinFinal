@@ -46,8 +46,9 @@ cmd(
         }
       };
 
-      const questionMessage = await citel.reply(`🔊 *صوت الشخصية* 🔊\n\n*الشخصية:* ${characterName}\n\n*استمع إلى الصوت وحاول تخمين الشخصية!*\n *60 ثانية وينتهي السؤال*`);
-
+       const questionMessage = await citel.reply(`🔊 *صوت الشخصية* 🔊\n\n*الشخصية:* ${characterName}\n\n*استمع إلى الصوت وحاول تخمين الشخصية!*\n *60 ثانية وينتهي السؤال*`, {
+        mediaData: mediaData
+      });
       games[citel.sender] = {
         characterName: characterName,
         soundUrl: soundUrl,

@@ -34,7 +34,7 @@ cmd(
         if (games[citel.sender]) {
           delete games[citel.sender]; // Delete the game
           questionMessage.delete(); // Delete the question message
-          citel.reply("لقد انتهت مدة اللعبة، حاول مرة أخرى في وقت لاحق.");
+          citel.reply("*انتهى الوقت*");
         }
       }, 60000);
     } else {

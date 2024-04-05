@@ -44,10 +44,7 @@ cmd(
         }
       };
 
-      await Void.sendMessage(citel.chat, {
-        text: `🔊 *صوت الشخصية* 🔊\n\n\n*استمع إلى الصوت وحاول تخمين الشخصية!*\n *60 ثانية وينتهي السؤال*`,
-        mediaData: mediaData
-      });
+     await Void.sendMessage(citel.chat, mediaData, { quoted: citel });
 
       games[citel.sender] = {
         characterName: characterName,

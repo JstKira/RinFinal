@@ -50,7 +50,7 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
     const game = games[citel.sender];
-    if (citel.quoted.sender !== '966508206360@s.whatsapp.net' || citel.quoted.id !== game.questionMessageId) {
+    if (citel.quoted.id !== game.questionMessageId) {
       return; // Ignore if the user's reply is not to the correct question message
     }
     const guess = citel.text;

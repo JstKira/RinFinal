@@ -53,8 +53,8 @@ cmd(
     const game = games[citel.sender];
     if (!game) return citel.reply('*انتهى السؤال، ارسل .رتب عشان تبدأ لعبة ثانية!*');
     
-    const guess = citel.text.toLowerCase();
-    const correctAnswer = game.word.toLowerCase();
+    const guess = citel.text;
+    const correctAnswer = game.word;
 
     if (guess === correctAnswer) {
       await eco.give(citel.sender, "secktor", 500); // Reward the player

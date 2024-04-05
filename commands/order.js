@@ -55,7 +55,7 @@ cmd(
     }
     const guess = citel.text;
 
-    if (guess === game.word.toLowerCase()) {
+    if (guess === game.word) {
       await eco.give(citel.sender, "secktor", 500); // Reward the player
       citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
       delete games[citel.sender]; // Delete the game

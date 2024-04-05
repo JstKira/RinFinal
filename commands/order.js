@@ -1,4 +1,4 @@
-const { cmd, tlang, smsg } = require("../lib/");
+const { cmd } = require("../lib/");
 const eco = require('discord-mongoose-economy');
 const fs = require('fs');
 
@@ -17,10 +17,9 @@ cmd(
     if (!games[citel.sender]) {
       const word = wordList[Math.floor(Math.random() * wordList.length)];
       const scrambledWord = scrambleWord(word);
-      const formattedWord = word.split('').join(' ');
       const formattedScrambledWord = scrambledWord.split('').join(' ');
       
-      const questionMessage = await citel.reply(`🧩 *رتب الحروف* 🧩\n\n*الحروف :*\n\n\`${formattedScrambledWord}\`\n\n*سيتم حذف اللعبة خلال 60 ثانيةاذا ماجاوبت*`);
+      const questionMessage = await citel.reply(`🧩 *رتب الحروف* 🧩\n\n*الحروف :*\n\n\`${formattedScrambledWord}\`\n\n*سيتم حذف اللعبة خلال 60 ثانية اذا ما جاوبت*`);
       
       games[citel.sender] = {
         word: word,
@@ -51,7 +50,7 @@ cmd(
     let id = citel.chat;
     if (!citel.quoted || !citel.quoted.fromMe || !citel.quoted.isBaileys || !/^ⷮ/i.test(citel.quoted.text)) return;
     
-    const game = games[id];
+    const game = games[citel.sender];
     if (!game) return citel.reply('*انتهى السؤال، ارسل .رتب عشان تبدأ لعبة ثانية!*');
     
     const guess = citel.text.toLowerCase();
@@ -60,7 +59,7 @@ cmd(
     if (guess === correctAnswer) {
       await eco.give(citel.sender, "secktor", 500); // Reward the player
       citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
-      delete games[id]; // Delete the game
+      delete games[citel.sender]; // Delete the game
     } else {
       citel.reply(`❌ *خطأ*`);
     }

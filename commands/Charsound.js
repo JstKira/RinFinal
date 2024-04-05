@@ -76,7 +76,7 @@ cmd(
     if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
       return; // If there's no quoted message or if the sender doesn't match, do nothing
     }
-
+    
     const guess = citel.text;
     const correctAnswer = game.characterName;
 

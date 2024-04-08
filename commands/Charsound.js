@@ -55,7 +55,7 @@ cmd(
       setTimeout(() => {
         if (games[citel.sender]) {
           delete games[citel.sender]; // Delete the game
-          citel.reply("*انتهى الوقت*");
+          citel.reply("*انتهى الوقت*\n\n`الجواب:${game.characterName}`");
         }
       }, 120000); // 120 seconds in milliseconds
     } else {
@@ -82,10 +82,10 @@ cmd(
 
     if (guess === correctAnswer) {
       citel.reply(`🎉 *تهانينا!* لقد حزرت الشخصية بشكل صحيح.`);
+      delete games[citel.sender];
     } else {
-      citel.reply(`❌ *خطأ*! الشخصية الصحيحة هي: ${game.characterName}`);
+      citel.reply(`❌ *خطأ*! حاول مرة ثانيه`);
     }
-
-    delete games[citel.sender]; // Delete the game
+ // Delete the game
   }
 );

@@ -3,7 +3,7 @@ const fs = require('fs');
 
 // Read the character sounds from the JSON file
 const characterSounds = JSON.parse(fs.readFileSync('./lib/charsound.json'));
-const nicetitle = '🔊 من هي الشخصية؟ 🔊\n\n60 ثانية وينتهي السؤال';
+const nicetitle = '🔊 من هي الشخصية؟ 🔊\nدقيقتين وينتهي السؤال';
 const nicebody = "|| ◁ㅤ❚❚ㅤ▷||ㅤ ↻";
 const nicepic = 'https://static.wikia.nocookie.net/thebreaker/images/2/2a/NW_Chapter_186.jpg';
 
@@ -57,7 +57,7 @@ cmd(
           delete games[citel.sender]; // Delete the game
           citel.reply("*انتهى الوقت*");
         }
-      }, 60000); // 60 seconds in milliseconds
+      }, 120000); // 120 seconds in milliseconds
     } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
     }

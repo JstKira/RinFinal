@@ -15,7 +15,7 @@ cmd({
         const participants = citel.isGroup ? await groupMetadata.participants : "";
         const groupAdmins = await getAdmin(Void, citel)
         const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
-        if (!isAdmins) return citel.reply(tlang().admin);
+        if (!isAdmins) return citel.reply('خاص بالمشرفين')
 
         let textt = `────────── ✦ ──────────
     🔔 *منشن جماعي* 🔔

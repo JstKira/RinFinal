@@ -17,12 +17,12 @@ cmd({
         const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
         if (!isAdmins) return citel.reply('خاص بالمشرفين')
 
-        let textt = `────────── ✦ ──────────
+        let textt = `──── ✦ ────
     🔔 *منشن جماعي* 🔔
 
 ➤ *الرسالة:* ${text ? text : citel.text}\n\n
 ➤ *المرسل:* ${citel.pushName} 🏷️
-────────── ✦ ──────────
+──── ✦ ────
 `
         for (let mem of participants) {
             textt += `📍 @${mem.id.split("@")[0]}\n`;

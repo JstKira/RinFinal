@@ -28,7 +28,7 @@ const openai = new OpenAIApi(configuration);
 
 //......................................................
 
-cmd({
+/*cmd({
     pattern: "ارسم",
     alias : ['تخيل','dall-e'],
     desc: "Create Image by AI",
@@ -70,7 +70,7 @@ Void.sendMessage(citel.reply,{image:{url:data.data[0].url}})
 //......................................................
 const Poetry = require('../lib/database/Poetry.js');
 
-
+*/
 cmd({
   pattern: "قصيدة",
   desc: "يرسل قصيدة عشوائية",

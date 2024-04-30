@@ -1,4 +1,4 @@
-const { cmd } = require('../lib');
+/*const { cmd } = require('../lib');
 const fs = require('fs');
 const eco = require('discord-mongoose-economy');
 
@@ -80,3 +80,4 @@ cmd(
     }
   }
 );
+*/

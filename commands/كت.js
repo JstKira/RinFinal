@@ -54,10 +54,12 @@ cmd(
     on: "text"
   },
   async (Void, citel, text) => {
-    // Fetch a random anime name from the database
-    const randomAnimeName = await AnimeName.aggregate([{ $sample: { size: 1 } }]);
-    
-    // Send the random anime name
-    citel.reply(`اسم الشخصية العشوائي: ${randomAnimeName[0].name}`);
+    const typecmd = citel.text; 
+    if (typecmd === "كت") {
+      // Fetch a random anime name from the database
+      const randomAnimeName = await AnimeName.aggregate([{ $sample: { size: 1 } }]);
+      // Send the random anime name
+      citel.reply(`اسم الشخصية العشوائي: ${randomAnimeName[0].name}`);
+    }
   }
 );

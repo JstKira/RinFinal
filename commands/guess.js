@@ -12,7 +12,7 @@ let games = {}; // Store active games with user IDs as keys
 
 cmd(
   {
-    pattern: "احزر",
+    pattern: "خمن",
     desc: "يلعب لعبة الأسئلة",
     category: "العاب",
   },

@@ -50,7 +50,7 @@ async (Void, citel, text,{ isCreator }) => {
             'id': citel.quoted.sender.split('@')[0] + 'warn',
             'reason': text,
             'group': metadata.id,
-            'warnedby': citel.pushName,
+            'warnedby': citel.sender,
             'date': timesam
         }).save();
 

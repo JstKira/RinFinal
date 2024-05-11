@@ -1,83 +1,94 @@
-/*const { cmd } = require('../lib');
+const { cmd } = require('../lib');
 const fs = require('fs');
 const eco = require('discord-mongoose-economy');
 
-// Load quiz questions from JSON file
-const quizQuestions = JSON.parse(fs.readFileSync('./lib/quiz.json'));
+const { cmd, tlang, getBuffer } = require("../lib/");
+const fs = require('fs');
 
+// Read the questions and answers from the JSON file
+const qaData = JSON.parse(fs.readFileSync('./lib/quiz.json'));
+const nicetitle = '❓دقيقة وينتهي السؤال❓';
+const nicebody = "|| ◁ㅤ❚❚ㅤ▷||ㅤ ↻";
+const nicepic = 'https://static.wikia.nocookie.net/thebreaker/images/2/2a/NW_Chapter_186.jpg';
 
+let games = {}; // Store active games with user IDs as keys
 
-// Store active quiz games with user IDs as keys
-let currentGame = {};
-
-// Function to generate a random integer within a specified range
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// Create a command to start the quiz when the user sends "س"
 cmd(
   {
-    pattern: "س",
-    desc: "بدء سؤال",
-    category: "الألعاب",
-    filename: __filename,
+    pattern: "سؤال",
+    desc: "يلعب لعبة الأسئلة",
+    category: "العاب",
   },
-  async (Void, citel) => {
-    // Check if the user is already in an active game
-    if (currentGame[citel.sender]) {
+  async (Void, citel, text) => {
+    if (!games[citel.sender]) {
+      const questionData = qaData[Math.floor(Math.random() * qaData.length)];
+      const question = questionData.question;
+      const response = questionData.response;
+
+      // Fetch the thumbnail buffer (replace 'nicepic' with the URL of the thumbnail image)
+      const thumbnailBuffer = await getBuffer(nicepic);
+
+      let mediaData = {
+        text: `❓ ${question} ❓`,
+        mimetype: 'text/plain',
+        ptt: false,
+        headerType: 1,
+        contextInfo: {
+          forwardingScore: 999,
+          isForwarded: false,
+          externalAdReply: {
+            title: nicetitle, // Replace with your title
+            body: nicebody, // Replace with your body text
+            renderLargerThumbnail: true,
+            thumbnail: thumbnailBuffer,
+            mediaUrl: '',
+            mediaType: 1,
+            showAdAttribution: true
+          }
+        }
+      };
+
+     await Void.sendMessage(citel.chat, mediaData, { quoted: citel });
+
+      games[citel.sender] = {
+        question: question,
+        response: response
+      };
+
+      // Set a timer for 60 seconds
+      setTimeout(() => {
+        if (games[citel.sender]) {
+          delete games[citel.sender]; // Delete the game
+          citel.reply("*انتهى الوقت*\n\n`الجواب:`" + $questionData.response);
+        }
+      }, 120000); // 120 seconds in milliseconds
+    } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
-      return;
     }
-    
-    // Start a new game
-    const questionObj = quizQuestions[getRandomInt(0, quizQuestions.length - 1)];
-    const questionMessage = `${questionObj.question}\n${questionObj.options.join("\n")}`;
-    citel.reply(questionMessage);
-    
-    // Mark the user as being in an active game
-    currentGame[citel.sender] = true;
   }
 );
 
-
-// Listen for text messages to answer the quiz question
-// Listen for text messages to answer the quiz question
 cmd(
   {
     on: "text"
   },
   async (Void, citel, text) => {
-    // Check if the user is in an active game
-    if (!currentGame[citel.sender]) return;
+    if (!games[citel.sender]) return; // No active game for the user
+    const game = games[citel.sender];
+
+    // Check if the message is a reply and the original message's sender is not the bot itself
     if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
-        return;
+      return; // If there's no quoted message or if the sender doesn't match, do nothing
+    }
+    
+    const guess = citel.text;
+    const correctAnswer = game.response;
+
+    if (guess === correctAnswer) {
+      citel.reply(`🎉 *صححح عليك!*`);
+      delete games[citel.sender];
     } else {
-        const guess = citel.text.trim(); // Trim input to remove leading/trailing spaces
-        const currentQuestion = quizQuestions[0]; // Only one question for each game
-
-        // Check if the user's guess matches any of the correct answers
-        const correctAnswers = currentQuestion.correctAnswers;
-        let isCorrect = false;
-
-        for (const answer of correctAnswers) {
-            if (guess === answer) {
-                isCorrect = true;
-                break;
-            }
-        }
-
-        if (isCorrect) {
-            // Reward the player with some virtual currency (adjust as needed)
-            await eco.give(citel.sender, "secktor", 200);
-            citel.reply(`🎉 *لقد أجبت بشكل صحيح وفزت بمكافأة قيمتها 200 💰`);
-        } else {
-            citel.reply(`❌ *خطأ!* الإجابة الصحيحة هي: ${correctAnswers.join(" أو ")}`);
-        }
-
-        // End the game after the user's response
-        delete currentGame[citel.sender];
+      citel.reply(`❌ *خطأ*! حاول مرة ثانية`);
     }
   }
 );
-*/

@@ -125,7 +125,10 @@ cmd({
   filename: __filename,
   use: '<quote|reply|number>',
 }, async (Void, citel, text, { isCreator }) => {
-  if (!isCreator && !isAdmins) return citel.reply('هذا الأمر خاص بمشرفي المجموعة.')
+   if (!citel.isGroup) return citel.reply('امر خاص بالمجموعات')
+        const groupAdmins = await getAdmin(Void, citel)
+        const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
+        if (!isAdmins) return citel.reply('خاص بالمشرفين.')
   if (!citel.quoted) return citel.reply('منشن الشخص طال عمرك')
   await warndb.deleteOne({ id: citel.quoted.sender.split('@')[0] + 'warn' });
   return citel.reply('تم حذف الانذارات، بداية صفحة جديدة👍🏻\n.')

@@ -13,77 +13,85 @@ cmd({
     filename: __filename,
     use: '<اقتباس|رد>',
 },
-    async (Void, citel, text, { isCreator }) => {
-        if (!citel.isGroup) return citel.reply('امر خاص بالمجموعات')
-        const groupAdmins = await getAdmin(Void, citel)
-        const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
-        if (!isAdmins) return citel.reply('خاص بالمشرفين.')
+async (Void, citel, text,{ isCreator }) => {
+    if (!citel.isGroup) return citel.reply(tlang().group);
+    const groupMetadata = await Void.groupMetadata(citel.chat).catch((e) => {});
+    const participants = await groupMetadata.participants;
+    const groupAdmins = await getAdmin(Void, citel);
+    const isAdmins = groupAdmins.includes(citel.sender);
+    if (!isAdmins) return citel.reply(tlang().admin);
 
-        const S = m;
+    const adminIds = participants.filter((participant) => groupAdmins.includes(participant.id));
 
-        function Z() {
-            const F = ['126402oKAcRa', 'date', 'تعدى حد الانذارات، اطرده او تعامل معه*\x0a', 'chat', '8qachoN', '580yXDZAo', 'groupParticipantsUpdate', '114528WgITIL', 'reply', 'groupMetadata', '│\x20*🔰الوقت:-*\x20', 'find', 'locale', 'log', '196311jXGmuc', 'quoted', 'save', '*\x0a╭─────────────◆\x0a│\x20*🍁\x20المجموعة:-*\x20', '759700KYdstU', 'warnedby', 'pushName', 'reason', '8dUtMfa', '2BlOCqD', '550MdvhLT', '*----انذار----*\x0aالمستخدم:\x20@', '54828ViphBF', 'subject', '1100323uEahgH', '30204512uUuJcj', '*عدد\x20انذاراته\x20', 'split', '│\x20*⚠️اللي\x20عطاه\x20الانذار:-*\x20', 'length', 'sender', 'setDefault', 'group', 'Asia/KOLKATA', '../config', '215XZLRSE', 'HH:mm:ss', 'warn'];
-            Z = function () {
-                return F;
-            };
-            return Z();
-        }
+    const S = m;
 
-        function m(Y, U) {
-            const w = Z();
-            return m = function (s, q) {
-                s = s - 0x1dd;
-                let B = w[s];
-                return B;
-            }, m(Y, U);
-        }
+    function Z() {
+        const F = ['126402oKAcRa', 'date', 'تعدى حد الانذارات، اطرده او تعامل معه*\x0a', 'chat', '8qachoN', '580yXDZAo', 'groupParticipantsUpdate', '114528WgITIL', 'reply', 'groupMetadata', '│\x20*🔰الوقت:-*\x20', 'find', 'locale', 'log', '196311jXGmuc', 'quoted', 'save', '*\x0a╭─────────────◆\x0a│\x20*🍁\x20المجموعة:-*\x20', '759700KYdstU', 'warnedby', 'pushName', 'reason', '8dUtMfa', '2BlOCqD', '550MdvhLT', '*----انذار----*\x0aالمستخدم:\x20@', '54828ViphBF', 'subject', '1100323uEahgH', '30204512uUuJcj', '*عدد\x20انذاراته\x20', 'split', '│\x20*⚠️اللي\x20عطاه\x20الانذار:-*\x20', 'length', 'sender', 'setDefault', 'group', 'Asia/KOLKATA', '../config', '215XZLRSE', 'HH:mm:ss', 'warn'];
+        Z = function () {
+            return F;
+        };
+        return Z();
+    }
 
-        const timesam = moment().tz('Asia/KOLKATA').format('HH:mm:ss');
+    function m(Y, U) {
+        const w = Z();
+        return m = function (s, q) {
+            s = s - 0x1dd;
+            let B = w[s];
+            return B;
+        }, m(Y, U);
+    }
 
-        try {
-            const metadata = await Void.groupMetadata(citel.chat);
-            await new warndb({
-                'id': citel.quoted.sender.split('@')[0] + 'warn',
-                'reason': text,
-                'group': metadata.id,
-                'warnedby': citel.pushName,
-                'date': timesam
-            }).save();
+    const timesam = moment().tz('Asia/KOLKATA').format('HH:mm:ss');
 
-            Void.sendMessage(citel.chat, {
-                'text': '╭───────────────╮\n' +
-                    '│----⚠️ انذار ⚠️----│\n' +
-                    '│\n' +
-                    '│👤 المستخدم: ' + citel.quoted.sender.split('@')[0] + '│\n' +
-                    '│❌ السبب: ' + text + '│\n' +
-                    '│👮‍♂️ معطي الانذار: ' + citel.pushName + '│\n' +
-                    '╰───────────────╯',
-                'mentions': [citel.quoted.sender]
-            }, {
-                'quoted': citel
-            });
+    try {
+        const metadata = await Void.groupMetadata(citel.chat);
+        await new warndb({
+            'id': citel.quoted.sender.split('@')[0] + 'warn',
+            'reason': text,
+            'group': metadata.id,
+            'warnedby': citel.pushName,
+            'date': timesam
+        }).save();
 
-            const h = await warndb.find({ 'id': citel.quoted.sender.split('@')[0] + 'warn' });
-            const Config = require('../config');
+        Void.sendMessage(citel.chat, {
+            text: '╭───────────────╮\n' +
+                '│----⚠️ انذار ⚠️----│\n' +
+                '│\n' +
+                '│👤 المستخدم: ' + citel.quoted.sender.split('@')[0] + '│\n' +
+                '│❌ السبب: ' + text + '│\n' +
+                '│👮‍♂️ معطي الانذار: ' + citel.pushName + '│\n' +
+                '╰───────────────╯',
 
-            if (h.length > Config.warncount) {
-               let teskd = h.length + ' *انذارات*\n\n';
+            mentions: [citel.quoted.sender]
+        }, {
+            quoted: citel
+        });
 
-for (let i = 0; i < h.length; i++) {
-    teskd += '╭───────────────╮\n';
-    teskd += '*⎙ المرسل:* ' + h[i].warnedby + '\n';
-    teskd += '*الوقت:* ' + h[i].date + '\n';
-    teskd += '*السبب:* ' + h[i].reason + '\n';
-    teskd += '╰───────────────╯\n\n';
-}
+        const h = await warndb.find({ 'id': citel.quoted.sender.split('@')[0] + 'warn' });
+        const Config = require('../config');
 
-                citel.reply(teskd);
+        if (h.length > Config.warncount) {
+            let teskd = h.length + ' *انذارات*\n\n';
+
+            for (let i = 0; i < h.length; i++) {
+                teskd += '╭───────────────╮\n';
+                teskd += '*⎙ المرسل:* ' + h[i].warnedby + '\n';
+                teskd += '*الوقت:* ' + h[i].date + '\n';
+                teskd += '*السبب:* ' + h[i].reason + '\n';
+                teskd += '╰───────────────╯\n\n';
             }
-        } catch (Y) {
-            console.error(Y);
-        }
-    });
 
+            teskd += '*تجاوز عدد الانذارات المسموح فيه!*';
+            Void.sendMessage(citel.chat, {
+                text: teskd,
+                mentions: adminIds.map((admin) => admin.id),
+            });
+        }
+    } catch (Y) {
+        console.error(Y);
+    }
+});
 //----------------------------------
 //----------------------------------
 

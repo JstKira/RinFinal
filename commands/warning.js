@@ -113,3 +113,23 @@ cmd({
     )
 
 
+
+//----------------------------------
+//----------------------------------
+
+
+cmd({
+  pattern: "حذف-انذار",
+  desc: "Deletes all previously given warns of quoted user.",
+  category: "للمشرفين",
+  filename: __filename,
+  use: '<quote|reply|number>',
+}, async (Void, citel, text, { isCreator }) => {
+  if (!isCreator && !isAdmins) return citel.reply('هذا الأمر خاص بمشرفي المجموعة.')
+  if (!citel.quoted) return citel.reply('منشن الشخص طال عمرك')
+  await warndb.deleteOne({ id: citel.quoted.sender.split('@')[0] + 'warn' });
+  return citel.reply('تم حذف الانذارات، بداية صفحة جديدة👍🏻\n.')
+}
+   )
+
+

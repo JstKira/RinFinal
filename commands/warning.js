@@ -13,12 +13,11 @@ cmd({
     filename: __filename,
     use: '<اقتباس|رد>',
 },
-async (Void, citel, text, { isCreator }) => {
-    if (!citel.isGroup) return citel.reply('امر خاص بالمجموعات');
-    const { isAdmins } = require('../lib');
-
-    if (!isCreator && !isAdmins) return citel.reply('هذا الأمر خاص بمشرفي المجموعة.');
-    if (!citel.quoted) return citel.reply('رد على رسالة الشخص');
+ async(Void, citel, text,{ isCreator }) => {
+             if (!citel.isGroup) return citel.reply('امر خاص بالمجموعات')
+            const groupAdmins = await getAdmin(Void, citel)
+            const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
+            if (!isAdmins) return citel.reply('خاص بالمشرفين.')
 
     const S = m;
 

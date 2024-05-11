@@ -4,7 +4,7 @@ const fs = require('fs');
 // Read the character sounds from the JSON file
 const characterSounds = JSON.parse(fs.readFileSync('./lib/charsound.json'));
 const nicetitle = '🔊 من هي الشخصية؟ 🔊\nدقيقتين وينتهي السؤال';
-const nicebody = "|| ◁ㅤ❚❚ㅤ▷||ㅤ ↻";
+const nicebody = "غومونريونغ |ㅤ ↻";
 const nicepic = 'https://static.wikia.nocookie.net/thebreaker/images/2/2a/NW_Chapter_186.jpg';
 
 let games = {}; // Store active games with user IDs as keys

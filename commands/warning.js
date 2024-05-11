@@ -46,12 +46,14 @@ cmd({
             'id': citel.quoted.sender.split('@')[0] + 'warn',
             'reason': text,
             'group': metadata.id,
-            'warnedby': citel.sender,
+            'warnedby': citel.pushName,
             'date': timesam
         }).save();
 
         Void.sendMessage(citel.chat, {
-            'text': S(0x1f2) + citel.quoted.sender.split('@')[0] + '\x0aالسبب:\x20' + text + '\x0aمعطي الانذار:\x20' + citel.sender,
+            'text': S(0x1f2) + citel.quoted.sender.split('@')[0] + 
+        '\n🚫 السبب: ' + text + 
+        '\n👮‍♂️ معطي الانذار: ' + citel.pushName,
             'mentions': [citel.quoted.sender]
         }, {
             'quoted': citel

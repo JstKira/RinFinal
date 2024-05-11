@@ -1,7 +1,4 @@
-const { cmd } = require('../lib');
-const fs = require('fs');
 const eco = require('discord-mongoose-economy');
-
 const { cmd, tlang, getBuffer } = require("../lib/");
 const fs = require('fs');
 

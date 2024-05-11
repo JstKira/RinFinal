@@ -60,16 +60,14 @@ cmd({
         const h = await warndb.find({ 'id': citel.quoted.sender.split('@')[0] + 'warn' });
         const Config = require('../config');
         
-        if (h.length > Config.warncount) {
-            let teskd = S(0x206);
-            teskd += S(0x1f7) + h.length + '\x20\x20انذارات.*\x0a';
-            
-           let teskd = S(0x1f7) + h.length + ' انذارات.\n\n';
+       if (h.length > Config.warncount) {
+    let teskd = S(0x1f7) + h.length + ' انذارات.\n\n';
 
-   for (let i = 0; i < h.length; i++) {
-    teskd += '*' + (i + 1) + '⎙ المرسل: *' + h[i].warnedby + '\n';
-    teskd += S(0x1f9) + 'الوقت: ' + h[i].date + '\n';
-    teskd += '└ السبب: ' + h[i].reason + '\n\n';
+    for (let i = 0; i < h.length; i++) {
+        teskd += '*' + (i + 1) + '⎙ المرسل: *' + h[i].warnedby + '\n';
+        teskd += S(0x1f9) + 'الوقت: ' + h[i].date + '\n';
+        teskd += '└ السبب: ' + h[i].reason + '\n\n';
+    }
 }
 
             

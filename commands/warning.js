@@ -139,7 +139,7 @@ cmd({
         if (!isAdmins) return citel.reply('خاص بالمشرفين.')
   if (!citel.quoted) return citel.reply('منشن الشخص طال عمرك')
   await warndb.deleteOne({ id: citel.quoted.sender.split('@')[0] + 'warn' });
-  return citel.reply('تم حذف الانذارات، بداية صفحة جديدة👍🏻\n.')
+  return citel.reply('تم حذف الانذار 👍🏻')
 }
    )
 

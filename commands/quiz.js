@@ -56,7 +56,7 @@ cmd(
       setTimeout(() => {
         if (games[citel.sender]) {
           delete games[citel.sender]; // Delete the game
-          citel.reply("*انتهى الوقت*\n\n`الجواب:`" + ${response});
+          citel.reply("*انتهى الوقت*\n\n`الجواب:`" + response);
         }
       }, 60000); // 120 seconds in milliseconds
     } else {

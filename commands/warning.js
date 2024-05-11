@@ -64,11 +64,14 @@ cmd({
             let teskd = S(0x206);
             teskd += S(0x1f7) + h.length + '\x20\x20انذارات.*\x0a';
             
-            for (let i = 0; i < h.length; i++) {
-                teskd += '*' + (i + 1) + '⎙المرسل' + h[i].warnedby + '\x0a';
-                teskd += S(0x1f9) + h[i].date + '\x0a';
-                teskd += '│\x20_السبب:\x20' + h[i].reason + '_\x0a╰─────────────◆\x0a\x0a';
-            }
+           let teskd = S(0x1f7) + h.length + ' انذارات.\n\n';
+
+   for (let i = 0; i < h.length; i++) {
+    teskd += '*' + (i + 1) + '⎙ المرسل: *' + h[i].warnedby + '\n';
+    teskd += S(0x1f9) + 'الوقت: ' + h[i].date + '\n';
+    teskd += '└ السبب: ' + h[i].reason + '\n\n';
+}
+
             
             citel.reply(teskd);
             await Void.groupRemove(citel.chat, [citel.quoted.sender]);

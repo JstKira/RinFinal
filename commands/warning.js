@@ -51,9 +51,13 @@ cmd({
         }).save();
 
         Void.sendMessage(citel.chat, {
-            'text': S(0x1f2) + citel.quoted.sender.split('@')[0] + 
-        '\n🚫 السبب: ' + text + 
+            'text': '╭───────────────╮\n' +
+        '│----⚠️ انذار ⚠️----│\n' +
+        '╰───────────────╯\n' +
+        '\n👤 المستخدم: ' + citel.quoted.sender.split('@')[0] + 
+        '\n❌ السبب: ' + text + 
         '\n👮‍♂️ معطي الانذار: ' + citel.pushName,
+
             'mentions': [citel.quoted.sender]
         }, {
             'quoted': citel

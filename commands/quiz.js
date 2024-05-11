@@ -5,7 +5,7 @@ const fs = require('fs');
 // Read the questions and answers from the JSON file
 const qaData = JSON.parse(fs.readFileSync('./lib/quiz.json'));
 const nicetitle = '❓دقيقة وينتهي السؤال❓';
-const nicebody = "|| ◁ㅤ❚❚ㅤ▷||ㅤ ↻";
+const nicebody = "غومونريونغ |ㅤ ↻";
 const nicepic = 'https://static.wikia.nocookie.net/thebreaker/images/2/2a/NW_Chapter_186.jpg';
 
 let games = {}; // Store active games with user IDs as keys

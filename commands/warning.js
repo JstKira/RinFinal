@@ -83,3 +83,33 @@ for (let i = 0; i < h.length; i++) {
             console.error(Y);
         }
     });
+
+//----------------------------------
+//----------------------------------
+
+cmd({
+            pattern: "انذارات",
+            desc: "Check warns",
+            category: "للمشرفين",
+            filename: __filename,
+            use: '<quoted/reply user.>',
+        },
+        async(Void, citel, text) => {
+            if (!citel.isGroup) return citel.reply('خاص بالمجموعات.')
+            if (!citel.quoted) return citel.reply('منشن اللي بتشوف انذاراته')
+            teskd = `*جميع الانذارات*\n\n`
+            let h = await warndb.find({ id: citel.quoted.sender.split('@')[0] + 'warn' })
+            console.log(h)
+            teskd += `*عنده ${h.length}  انذار/ات.*\n`
+            for (let i = 0; i < h.length; i++) {
+                teskd += `*${i+1}*\n╭─────────────◆\n│ *🍁المجموعة:-* ${h[i].group}\n`
+                teskd += `│ *🔰الوقت:-* ${h[i].date}\n`
+                teskd += `│ *⚠️تم اصدار الانذار من قبل:-* ${h[i].warnedby}\n`
+                teskd += `│ _📍السبب: ${h[i].reason}_\n╰─────────────◆\n\n`
+            }
+            citel.reply(teskd)
+        }
+
+    )
+
+

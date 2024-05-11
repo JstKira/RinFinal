@@ -71,9 +71,9 @@ cmd({
 
 for (let i = 0; i < h.length; i++) {
     teskd += '╭───────────────╮\n';
-    teskd += '│*⎙ المرسل:* ' + h[i].warnedby + '\n';
-    teskd += '│*الوقت:* ' + h[i].date + '\n';
-    teskd += '│*السبب:* ' + h[i].reason + '\n';
+    teskd += '*⎙ المرسل:* ' + h[i].warnedby + '\n';
+    teskd += '*الوقت:* ' + h[i].date + '\n';
+    teskd += '*السبب:* ' + h[i].reason + '\n';
     teskd += '╰───────────────╯\n\n';
 }
 

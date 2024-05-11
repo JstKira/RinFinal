@@ -58,7 +58,7 @@ cmd(
           delete games[citel.sender]; // Delete the game
           citel.reply("*انتهى الوقت*\n\n`الجواب:`" + ${response});
         }
-      }, 120000); // 120 seconds in milliseconds
+      }, 60000); // 120 seconds in milliseconds
     } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
     }

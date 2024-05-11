@@ -5,6 +5,20 @@ const Levels = require("discord-xp");
 
 //----------------------------------
 //----------------------------------
+
+cmd({
+            pattern: "انذار",
+            desc: "Warns user in Group.",
+            category: "للمشرفين",
+            filename: __filename,
+            use: '<quote|reply|number>',
+        },
+        async(Void, citel, text,{ isCreator }) => {
+             if (!citel.isGroup) return citel.reply('امر خاص بالمجموعات')
+            const groupAdmins = await getAdmin(Void, citel)
+            const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
+            if (!isAdmins) return citel.reply('خاص بالمشرفين.')
+            
 const S = m;
 
 function Z() {

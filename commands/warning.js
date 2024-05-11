@@ -72,7 +72,6 @@ cmd({
 
             
             citel.reply(teskd);
-            await Void.groupRemove(citel.chat, [citel.quoted.sender]);
         } catch (Y) {
         console.error(Y);
     }

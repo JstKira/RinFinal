@@ -57,7 +57,6 @@ cmd(
         setTimeout(() => {
           if (games[citel.sender]) {
             delete games[citel.sender]; // Delete the game
-            citel.reply("*انتهى الوقت*\n\n`الجواب:` " + response);
           }
         }, 60000); // 120 seconds in milliseconds
       } else {
@@ -83,7 +82,7 @@ cmd(
         return; // If there's no quoted message or if the sender doesn't match, do nothing
       }
       
-      const guess = citel.quoted.text;
+      const guess = citel.text;
       const correctAnswer = game.response;
 
       if (guess === correctAnswer) {

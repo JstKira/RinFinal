@@ -32,7 +32,7 @@ cmd(
         // Check if the game is still active
         if (games[citel.sender]) {
           delete games[citel.sender]; // Delete the game
-          citel.reply(`*انتهى الوقت* \n > الجواب: *${word}*`);
+          citel.reply(`*انتهى الوقت* \n> الجواب: *`${word}`*`);
         }
       }, 60000);
     } else {

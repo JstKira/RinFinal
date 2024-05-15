@@ -56,7 +56,7 @@ cmd(
       setTimeout(() => {
         if (games[citel.sender] && !games[citel.sender].answeredCorrectly) {
           delete games[citel.sender]; // Delete the game
-          citel.reply(`*انتهى الوقت*\n\nالجواب: ${characterName}`);
+          citel.reply(`*انتهى الوقت*\nالجواب: ${characterName}`);
         }
       }, 60000); // 120 seconds in milliseconds
     } else {
@@ -74,7 +74,7 @@ cmd(
     const game = games[citel.sender];
 
     // Check if the message is a reply and the original message's sender is not the bot itself
-    if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+    if (citel.quoted.sender !== Void.user.jid) {
       return; // If there's no quoted message or if the sender doesn't match, do nothing
     }
     

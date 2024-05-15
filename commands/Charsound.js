@@ -83,6 +83,7 @@ cmd(
 
     if (guess === correctAnswer) {
       citel.reply(`🎉 *تهانينا!* لقد حزرت الشخصية بشكل صحيح.`);
+      games[citel.sender].answeredCorrectly = true; // Set the flag to true
       delete games[citel.sender];
     } else {
       citel.reply(`❌ *خطأ*! حاول مرة ثانيه`);

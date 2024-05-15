@@ -74,7 +74,7 @@ cmd(
     const game = games[citel.sender];
 
     // Check if the message is a reply and the original message's sender is not the bot itself
-    if (citel.quoted.sender !== Void.user.jid) {
+    if (citel.quoted.sender !== citel.isBot) {
       return; // If there's no quoted message or if the sender doesn't match, do nothing
     }
     

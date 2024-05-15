@@ -49,14 +49,15 @@ cmd(
 
       games[citel.sender] = {
         question: question,
-        response: response
+        response: response,
+        answeredCorrectly: false
       };
 
       // Set a timer for 60 seconds
       setTimeout(() => {
-        if (games[citel.sender]) {
+        if (games[citel.sender] && !games[citel.sender].answeredCorrectly) {
           delete games[citel.sender]; // Delete the game
-          citel.reply("*انتهى الوقت*\n\n`الجواب:`" + response);
+          citel.reply(`*انتهى وقتك* \n الجواب: ${response}`);
         }
       }, 60000); // 120 seconds in milliseconds
     } else {
@@ -83,6 +84,7 @@ cmd(
 
     if (guess === correctAnswer) {
       citel.reply(`🎉 *صححح عليك!*`);
+      games[citel.sender].answeredCorrectly = true
       delete games[citel.sender];
     } else {
       citel.reply(`❌ *خطأ*! حاول مرة ثانية`);

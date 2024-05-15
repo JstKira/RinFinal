@@ -48,14 +48,15 @@ cmd(
 
       games[citel.sender] = {
         characterName: characterName,
-        soundUrl: soundUrl
+        soundUrl: soundUrl,
+        answeredCorrectly: false // Flag to check if the user has answered correctly
       };
 
       // Set a timer for 60 seconds
       setTimeout(() => {
-        if (games[citel.sender]) {
+        if (games[citel.sender] && !games[citel.sender].answeredCorrectly) {
           delete games[citel.sender]; // Delete the game
-          citel.reply("*انتهى الوقت*\n\n`الجواب: ${game.characterName}`");
+          citel.reply(`*انتهى الوقت*\n\nالجواب: ${characterName}`);
         }
       }, 120000); // 120 seconds in milliseconds
     } else {

@@ -7,6 +7,7 @@ const nicetitle = 'احزر الشخصية، دقيقة فقط وينتهي ال
 const nicebody = "غومونريونغ |ㅤ ↻";
 const nicepic = 'https://static.wikia.nocookie.net/thebreaker/images/2/2a/NW_Chapter_186.jpg';
 
+
 let games = {}; // Store active games with user IDs as keys
 
 cmd(
@@ -53,7 +54,12 @@ cmd(
       };
 
       // Set a timer for 120 seconds (2 minutes)
-     
+      setTimeout(() => {
+        if (games[citel.sender] && !games[citel.sender].answeredCorrectly) {
+          delete games[citel.sender]; // Delete the game
+          citel.reply(`*انتهى الوقت*\nالجواب: ${characterName}`);
+        }
+      }, 60000); // 120 seconds in milliseconds
     } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
     }
@@ -64,13 +70,13 @@ cmd(
   {
     on: "text"
   },
-  async (Void, citel, text) => {
+  async (Void, citel, text,{ isBot }) => {
     if (!games[citel.sender]) return; // No active game for the user
     const game = games[citel.sender];
-    const botNumber = await Void.decodeJid(Void.user.jid)
+    const botNumber = await Void.decodeJid(Void.user.id)
 
     // Check if the message is a reply and the original message's sender is not the bot itself
-    if (citel.quoted.sender !== botNumber) {
+  if (citel.quoted.sender !== botNumber) {
       return; // If there's no quoted message or if the message is not from the bot itself, do nothing
     }
     
@@ -84,13 +90,5 @@ cmd(
     } else {
       citel.reply(`❌ *خطأ*! حاول مرة ثانيه`);
     }
-    
-    // Set a timer for 60 seconds (1 minute)
-    setTimeout(() => {
-      if (games[citel.sender] && !games[citel.sender].answeredCorrectly) {
-        delete games[citel.sender]; // Delete the game
-        citel.reply(`*انتهى الوقت*\nالجواب: ${game.characterName}`);
-      }
-    }, 60000); // 60 seconds in milliseconds
   }
 );

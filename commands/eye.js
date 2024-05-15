@@ -18,14 +18,14 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) {
       const characterEye = characterEyes[Math.floor(Math.random() * characterEyes.length)];
-      const soundUrl = characterEye.img;
+      const imageUrl = characterEye.img;
       const characterName = characterEye.name;
 
       // Fetch the thumbnail buffer (replace 'nicepic' with the URL of the thumbnail image)
       const thumbnailBuffer = await getBuffer(nicepic);
 
       let mediaData = {
-        image: { url: soundUrl },
+        image: { url: imageUrl },
         mimetype: 'image/jpeg',
         ptt: true,
         headerType: 1,
@@ -48,7 +48,7 @@ cmd(
 
       games[citel.sender] = {
         characterName: characterName,
-        soundUrl: soundUrl,
+        imageUrl: imageUrl,
         answeredCorrectly: false // Flag to check if the user has answered correctly
       };
 

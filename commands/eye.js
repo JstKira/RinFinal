@@ -6,7 +6,7 @@ const characterEyes = JSON.parse(fs.readFileSync('./lib/eye.json'));
 const nicetitle = 'احزر الشخصية، دقيقة فقط وينتهي السؤال';
 const nicebody = "غومونريونغ |ㅤ ↻";
 const nicepic = 'https://static.wikia.nocookie.net/thebreaker/images/2/2a/NW_Chapter_186.jpg';
-const botNumber = await Void.decodeJid(Void.user.id)
+
 
 let games = {}; // Store active games with user IDs as keys
 
@@ -73,6 +73,7 @@ cmd(
   async (Void, citel, text,{ isBot }) => {
     if (!games[citel.sender]) return; // No active game for the user
     const game = games[citel.sender];
+    const botNumber = await Void.decodeJid(Void.user.id)
 
     // Check if the message is a reply and the original message's sender is not the bot itself
   if (citel.quoted.sender !== botNumber) {

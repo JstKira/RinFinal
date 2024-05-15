@@ -32,7 +32,6 @@ cmd(
         // Check if the game is still active
         if (games[citel.sender]) {
           delete games[citel.sender]; // Delete the game
-          questionMessage.delete(); // Delete the question message
           citel.reply("*انتهى الوقت*");
         }
       }, 60000);

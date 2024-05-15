@@ -1,25 +1,25 @@
 const { cmd } = require("../lib/");
 const eco = require('discord-mongoose-economy');
 const fs = require('fs');
+const AnimeName = require('../models/AnimeName');
 
-// Read the word list from the JSON file
-const wordList = JSON.parse(fs.readFileSync('./lib/names.json'));
 
 let games = {}; // Store active games with user IDs as keys
 
 cmd(
   {
     pattern: "رتب",
-    desc: " لعبة ترتيب اسامي",
+    desc: "لعبة ترتيب اسماء الأنمي",
     category: "العاب",
   },
   async (Void, citel, text) => {
     if (!games[citel.sender]) {
-      const word = wordList[Math.floor(Math.random() * wordList.length)];
+      const randomAnimeName = await AnimeName.aggregate([{ $sample: { size: 1 } }]);
+      const word = randomAnimeName[0].name;
       const scrambledWord = scrambleWord(word);
       const formattedScrambledWord = scrambledWord.split('').join(' ');
       
-      const questionMessage = await citel.reply(`🧩 *رتب الحروف* 🧩\n\n*الحروف :*\n\n\`${formattedScrambledWord}\`\n\n*سيتم حذف اللعبة خلال 60 ثانية اذا ما جاوبت*`);
+      const questionMessage = await citel.reply(`🧩 *رتب الحروف* 🧩\n\n*الحروف :*\n\n\`${formattedScrambledWord}\`\n\n*سيتم حذف اللعبة خلال 60 ثانية إذا ما جاوبت*`);
       
       games[citel.sender] = {
         word: word,
@@ -51,19 +51,19 @@ cmd(
 
     // Check if the message is a reply and the original message's sender is not the bot itself
     if (citel.quoted.sender !== botNumber) {
-    return;
-} else {
-    const guess = citel.text;
-    const game = games[citel.sender];
+      return;
+    } else {
+      const guess = citel.text;
+      const game = games[citel.sender];
 
-    if (guess === game.word.toLowerCase()) {
+      if (guess === game.word.toLowerCase()) {
         await eco.give(citel.sender, "secktor", 500); // Reward the player
         citel.reply(`🎉 *تهانينا!* لقد حزرت الاسم بشكل صحيح وفزت بمكافأة قيمتها 500💰.`);
         delete games[citel.sender]; // Delete the game
-    } else {
+      } else {
         citel.reply(`❌ *خطأ*`);
+      }
     }
-}
   }
 );
 

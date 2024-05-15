@@ -72,9 +72,10 @@ cmd(
   async (Void, citel, text) => {
     if (!games[citel.sender]) return; // No active game for the user
     const game = games[citel.sender];
+    const botNumber = await Void.decodeJid(Void.user.id)
 
     // Check if the message is a reply and the original message's sender is not the bot itself
-    if (citel.quoted.sender !== '966508206360@s.whatsapp.net') {
+   if (citel.quoted.sender !== botNumber)  {
       return; // If there's no quoted message or if the sender doesn't match, do nothing
     }
     

@@ -1,7 +1,7 @@
 const { cmd, tlang, getBuffer } = require("../lib/");
 const fs = require('fs');
 
-// Read the character sounds from the JSON file
+// Read the character eyes from the JSON file
 const characterEyes = JSON.parse(fs.readFileSync('./lib/eye.json'));
 const nicetitle = 'احزر الشخصية، دقيقة فقط وينتهي السؤال';
 const nicebody = "غومونريونغ |ㅤ ↻";
@@ -44,20 +44,21 @@ cmd(
         }
       };
 
-     await Void.sendMessage(citel.chat, mediaData, { quoted: citel });
+      await Void.sendMessage(citel.chat, mediaData, { quoted: citel });
 
       games[citel.sender] = {
         characterName: characterName,
-        soundUrl: soundUrl
+        soundUrl: soundUrl,
+        answeredCorrectly: false // Flag to check if the user has answered correctly
       };
 
-      // Set a timer for 60 seconds
+      // Set a timer for 120 seconds (2 minutes)
       setTimeout(() => {
-        if (games[citel.sender]) {
+        if (games[citel.sender] && !games[citel.sender].answeredCorrectly) {
           delete games[citel.sender]; // Delete the game
-          citel.reply(`*انتهى الوقت*\n\nالجواب: ${games[citel.sender].characterName}`);
+          citel.reply(`*انتهى الوقت*\n\nالجواب: ${characterName}`);
         }
-      }, 120000); // 120 seconds in milliseconds
+      }, 60000); // 120 seconds in milliseconds
     } else {
       citel.reply("لديك لعبة نشطة بالفعل!");
     }
@@ -82,10 +83,10 @@ cmd(
 
     if (guess === correctAnswer) {
       citel.reply(`🎉 *تهانينا!* لقد حزرت الشخصية بشكل صحيح.`);
+      games[citel.sender].answeredCorrectly = true; // Set the flag to true
       delete games[citel.sender];
     } else {
       citel.reply(`❌ *خطأ*! حاول مرة ثانيه`);
     }
- // Delete the game
   }
 );

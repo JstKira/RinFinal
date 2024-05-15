@@ -1,7 +1,7 @@
 const { cmd } = require("../lib/");
 const eco = require('discord-mongoose-economy');
 const fs = require('fs');
-const AnimeName = require('../models/AnimeName');
+const AnimeName = require('../lib/database/animeName.js');
 
 
 let games = {}; // Store active games with user IDs as keys

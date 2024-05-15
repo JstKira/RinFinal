@@ -69,12 +69,12 @@ cmd(
   {
     on: "text"
   },
-  async (Void, citel, text) => {
+  async (Void, citel, text,{ isBot }) => {
     if (!games[citel.sender]) return; // No active game for the user
     const game = games[citel.sender];
 
     // Check if the message is a reply and the original message's sender is not the bot itself
-  if (!citel.quoted || !citel.fromMe) {
+  if (!citel.quoted.sender != isBot) {
       return; // If there's no quoted message or if the message is not from the bot itself, do nothing
     }
     
